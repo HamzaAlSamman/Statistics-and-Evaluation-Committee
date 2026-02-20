@@ -45,84 +45,88 @@
   // -------------------------
   // Header + Mobile menu (robust)
   // -------------------------
-  const setupHeaderAndMenu = () => {
-    const header = $(".site-header");
-    const btn = $("#menuBtn");
-    const nav = $("#nav");
+ const setupHeaderAndMenu = () => {
+  const btn = document.getElementById("menuBtn");
+  const nav = document.getElementById("nav");
+  const overlay = document.getElementById("navOverlay");
 
-    if (header) {
-      // Hardening against z-index / overlap issues
-      header.style.width = "100%";
-      header.style.left = "0";
-      header.style.right = "0";
-      header.style.zIndex = "999";
-      header.style.position = header.style.position || "sticky";
-      header.style.top = header.style.top || "0";
-    }
+  if (!btn || !nav) return;
 
-    if (!btn || !nav) return;
+  let isOpen = false;
+  let lastFocus = null;
 
-    let isOpen = false;
+  const focusableSelector =
+    'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
-    const setOpen = (open) => {
-      isOpen = !!open;
-      nav.classList.toggle("open", isOpen);
-      btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
-      nav.setAttribute("aria-hidden", isOpen ? "false" : "true");
+  const setOpen = (open) => {
+    isOpen = !!open;
 
-      // Fallback in case CSS isn't applying properly
-      if (window.matchMedia("(max-width: 1024px)").matches) {
-        nav.style.display = isOpen ? "block" : "none";
-      } else {
-        nav.style.display = "";
-      }
+    if (isOpen) lastFocus = document.activeElement;
 
-      document.documentElement.classList.toggle("nav-open", isOpen);
-    };
+    nav.classList.toggle("open", isOpen);
+    overlay?.classList.toggle("open", isOpen);
 
-    // Click sometimes fails due to overlay/scroll; handle pointerdown too
-    const toggle = (e) => {
-      e?.preventDefault?.();
-      e?.stopPropagation?.();
-      setOpen(!isOpen);
-    };
+    btn.classList.toggle("is-open", isOpen);
+    document.body.classList.toggle("nav-open", isOpen);
 
-    btn.addEventListener("pointerdown", toggle, { passive: false });
-    btn.addEventListener("click", toggle, { passive: false });
+    btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    btn.setAttribute("aria-label", isOpen ? "إغلاق القائمة" : "فتح القائمة");
 
-    // Close when clicking a link (mobile)
-    $$(".nav-link", nav).forEach((a) => {
-      a.addEventListener("click", () => {
-        if (window.matchMedia("(max-width: 1024px)").matches) setOpen(false);
-      });
-    });
+    nav.setAttribute("aria-hidden", isOpen ? "false" : "true");
+    overlay?.setAttribute("aria-hidden", isOpen ? "false" : "true");
 
-    // Close on Escape
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") setOpen(false);
-    });
-
-    // Reset on resize
-    window.addEventListener(
-      "resize",
-      rafThrottle(() => {
-        if (!window.matchMedia("(max-width: 1024px)").matches) {
-          nav.style.display = "";
-          setOpen(false);
-        } else {
-          // Ensure closed state doesn't keep nav visible
-          nav.style.display = isOpen ? "block" : "none";
-        }
-      }),
-      { passive: true }
-    );
-
-    // Init closed on mobile
-    if (window.matchMedia("(max-width: 1024px)").matches) {
-      nav.style.display = "none";
-      nav.setAttribute("aria-hidden", "true");
+    if (isOpen) {
+      // Move focus to first link for accessibility
+      const first = nav.querySelector(".nav-link");
+      first?.focus?.();
+    } else {
+      // Return focus back to menu button (or last focus)
+      (lastFocus && lastFocus.focus) ? lastFocus.focus() : btn.focus();
     }
   };
+
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    setOpen(!isOpen);
+  });
+
+  overlay?.addEventListener("click", () => setOpen(false));
+
+  nav.querySelectorAll(".nav-link").forEach((a) => {
+    a.addEventListener("click", () => setOpen(false));
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setOpen(false);
+
+    // Basic focus trap when nav is open
+    if (!isOpen || e.key !== "Tab") return;
+
+    const focusables = Array.from(nav.querySelectorAll(focusableSelector));
+    if (!focusables.length) return;
+
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+
+  window.addEventListener(
+    "resize",
+    rafThrottle(() => {
+      if (!window.matchMedia("(max-width: 1024px)").matches) setOpen(false);
+    }),
+    { passive: true }
+  );
+
+  setOpen(false);
+};
 
   // -------------------------
   // Header shadow on scroll
@@ -429,7 +433,7 @@
       type: "bar",
       data: {
         labels: ["الطلاب", "الأفراد", "العائلات", "أخرى"],
-        datasets: [{ label: "توزع الزوار المهني", data: [45, 20, 25, 10] }],
+        datasets: [{ label: "", data: [45, 20, 25, 10] }],
       },
       options: {
         indexAxis: "y",
@@ -459,13 +463,37 @@
     });
 
     createChart("delegationChart", {
-      type: "pie",
-      data: {
-        labels: ["رسمية سورية", "دولية", "نقابات وجامعات"],
-        datasets: [{ data: [45, 30, 25] }],
+  type: "pie",
+  data: {
+    labels: ["رسمية سورية", "دولية", "نقابات وجامعات"],
+    datasets: [{ data: [45, 30, 25] }],
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: {
+          color: "#ffffff", 
+          font: {
+            size: 14 
+          }
+        }
       },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "bottom" } } },
-    });
+      tooltip: {
+        callbacks: {
+          title: function () {
+            return ''; 
+          },
+          label: function (context) {
+            return context.label || '';
+          }
+        }
+      }
+    }
+  },
+});
 
     createChart("programChart", {
       type: "bar",
@@ -589,8 +617,8 @@
     };
 
     const dailyData = [
-      { day: "6 شباط (الافتتاح)", target: 58450, events: { "H1.1": 3, "H10.1": 2, H28: 2 },
-        densities: { H1: 65, H2: 85, H10: 80, H11: 55, H25: 60, H26: 50, H27: 60, H28: 40, "H1.1": 45, "H10.1": 35, H41: 40, "12": 35, VIP: 5, PR: 40 } },
+      { day: "6 شباط (الافتتاح)", target: 158450, events: { "H1.1": 5, "H10.1": 4, H28: 4 },
+        densities: { H1: 90, H2: 95, H10: 95, H11: 85, H25: 88, H26: 80, H27: 85, H28: 75, "H1.1": 60, "H10.1": 45, H41: 45, "12": 40, VIP: 10, PR: 45 } },
       { day: "7 شباط", target: 47563, events: { "H1.1": 9, "H10.1": 8, H28: 6 },
         densities: { H1: 70, H2: 88, H10: 85, H11: 60, H25: 65, H26: 55, H27: 65, H28: 80, "H1.1": 85, "H10.1": 85, H41: 45, "12": 40, VIP: 8, PR: 45 } },
       { day: "8 شباط", target: 65725, events: { "H1.1": 9, "H10.1": 3, H28: 4 },
@@ -605,10 +633,10 @@
         densities: { H1: 90, H2: 100, H10: 100, H11: 85, H25: 90, H26: 85, H27: 90, H28: 80, "H1.1": 65, "H10.1": 45, H41: 45, "12": 40, VIP: 8, PR: 45 } },
       { day: "13 شباط (ذروة الزحام)", target: 245500, events: { "H1.1": 8, "H10.1": 6, H28: 7 },
         densities: { H1: 98, H2: 100, H10: 100, H11: 95, H25: 98, H26: 96, H27: 98, H28: 95, "H1.1": 92, "H10.1": 88, H41: 85, "12": 87, VIP: 15, PR: 90 } },
-      { day: "14 شباط", target: 198200, events: { "H1.1": 5, "H10.1": 4, H28: 4 },
-        densities: { H1: 92, H2: 100, H10: 100, H11: 88, H25: 94, H26: 88, H27: 92, H28: 85, "H1.1": 65, "H10.1": 55, H41: 55, "12": 50, VIP: 10, PR: 55 } },
-      { day: "15 شباط", target: 181812, events: { "H1.1": 4, "H10.1": 3, H28: 3 },
-        densities: { H1: 88, H2: 100, H10: 100, H11: 82, H25: 88, H26: 80, H27: 88, H28: 75, "H1.1": 55, "H10.1": 45, H41: 65, "12": 60, VIP: 8, PR: 60 } },
+      { day: "14 شباط", target: 50, events: { "H1.1": 0, "H10.1": 0, H28: 0 },
+        densities: { H1: 2, H2: 5, H10: 3, H11: 1, H25: 2, H26: 1, H27: 2, H28: 1, "H1.1": 1, "H10.1": 1, H41: 1, "12": 1, VIP: 1, PR: 1 } },
+      { day: "15 شباط", target: 50, events: { "H1.1": 0, "H10.1": 0, H28: 0 },
+        densities: { H1: 1, H2: 2, H10: 1, H11: 1, H25: 1, H26: 1, H27: 1, H28: 1, "H1.1": 1, "H10.1": 1, H41: 1, "12": 1, VIP: 1, PR: 1 } },
       { day: "16 شباط (الختام)", target: 45300, events: { "H1.1": 1, "H10.1": 1, H28: 1 },
         densities: { H1: 45, H2: 65, H10: 60, H11: 35, H25: 40, H26: 30, H27: 55, H28: 30, "H1.1": 25, "H10.1": 25, H41: 15, "12": 15, VIP: 3, PR: 25 } },
     ];
