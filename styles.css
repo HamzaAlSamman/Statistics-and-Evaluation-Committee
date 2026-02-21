@@ -1530,3 +1530,37 @@ body.nav-open{
 .gallery-wrapper{
   direction: ltr;
 }
+
+/* لازم .gallery-track تكون شريط واحد */
+.gallery-track{
+  display:flex;
+  gap: 18px;
+  align-items:center;
+  width: max-content;
+  padding: 0 18px;
+
+  /* التحريك مثل شركاء النجاح */
+  animation: galleryScroll 28s linear infinite;
+  will-change: transform;
+}
+
+/* إيقاف عند hover */
+.gallery-wrapper:hover .gallery-track{
+  animation-play-state: paused;
+}
+
+@keyframes galleryScroll{
+  0%{ transform: translateX(0); }
+  100%{ transform: translateX(-50%); }
+}
+
+/* مهم: set تكون flex حتى ما ترجع عمودية */
+.gallery-set{
+  display:flex;
+  gap: 18px;
+  align-items:center;
+  width: max-content;
+}
+
+/* تثبيت اتجاه المعرض */
+.gallery-wrapper{ direction: ltr; }
