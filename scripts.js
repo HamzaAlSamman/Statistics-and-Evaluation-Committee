@@ -964,6 +964,123 @@
     }
   };
 
+    // -------------------------
+  // Gallery (public images + pending uploads)
+  // Requires backend endpoints:
+  //   ./gallery/list.php  -> returns { files: ["a.jpg", ...] }
+  //   ./gallery/upload.php -> accepts multipart, saves to uploads/pending
+  // -------------------------
+const setupGallery = () => {
+  const track = document.getElementById("galleryTrack");
+  const wrapper = document.querySelector(".gallery-wrapper");
+  if (!track || !wrapper) return;
+
+  const guessGhBase = () => {
+    const parts = location.pathname.split("/").filter(Boolean);
+    if (!location.hostname.endsWith("github.io")) return "";
+    if (!parts.length) return "";
+    const first = parts[0];
+    if (first.includes(".")) return "";
+    const reserved = new Set(["uploads","gallery","assets","css","js","img","images"]);
+    if (reserved.has(first.toLowerCase())) return "";
+    return `/${first}`;
+  };
+
+  const GH_BASE = guessGhBase();
+  const LIST_URL = `${GH_BASE}/uploads/public/gallery.json`;
+  const PUBLIC_DIR = `${GH_BASE}/uploads/public/`;
+
+  const buildItem = (filename) => {
+    const wrap = document.createElement("div");
+    wrap.className = "gallery-item";
+    const img = document.createElement("img");
+    img.loading = "lazy";
+    img.alt = "صورة من المعرض";
+    img.src = PUBLIC_DIR + encodeURIComponent(filename);
+    wrap.appendChild(img);
+    return wrap;
+  };
+
+  const waitImages = (root) => {
+    const imgs = Array.from(root.querySelectorAll("img"));
+    return Promise.all(imgs.map((im) => {
+      if (im.complete) return Promise.resolve();
+      return new Promise((res) => {
+        im.addEventListener("load", res, { once: true });
+        im.addEventListener("error", res, { once: true });
+      });
+    }));
+  };
+
+let running = true;
+  let x = 0, lastT = 0, setWidth = 0;
+
+  const measure = () => {
+    const set1 = track.querySelector('.gallery-set[data-set="1"]');
+    setWidth = set1 ? set1.scrollWidth : 0;
+  };
+
+  const animate = (t) => {
+    if (!lastT) lastT = t;
+    const dt = (t - lastT) / 1000;
+    lastT = t;
+
+    if (running && setWidth > 0) {
+      const speed = 55;
+      x -= speed * dt;
+      if (Math.abs(x) >= setWidth) x += setWidth;
+      track.style.transform = `translateX(${x}px)`;
+    }
+    requestAnimationFrame(animate);
+  };
+
+wrapper.addEventListener("mouseenter", () => { running = false; });
+wrapper.addEventListener("mouseleave", () => { running = true; });
+
+  const loadGallery = async () => {
+    track.innerHTML = "";
+    x = 0; lastT = 0; setWidth = 0;
+
+    try {
+      const r = await fetch(LIST_URL, { cache: "no-store" });
+      if (!r.ok) throw new Error(String(r.status));
+      const data = await r.json();
+      const files = Array.isArray(data.files) ? data.files : [];
+
+      if (!files.length) {
+        const empty = document.createElement("div");
+        empty.className = "text-center w-full py-8 text-slate-500 font-bold";
+        empty.textContent = "لا توجد صور منشورة حالياً.";
+        track.appendChild(empty);
+        return;
+      }
+
+      const set1 = document.createElement("div");
+      set1.className = "gallery-set";
+      set1.dataset.set = "1";
+      files.forEach((f) => set1.appendChild(buildItem(f)));
+
+      const set2 = set1.cloneNode(true);
+      set2.dataset.set = "2";
+
+      track.appendChild(set1);
+      track.appendChild(set2);
+
+      await waitImages(track);
+      measure();
+      window.addEventListener("resize", rafThrottle(measure), { passive: true });
+      requestAnimationFrame(animate);
+    } catch {
+      const err = document.createElement("div");
+      err.className = "text-center w-full py-8 text-rose-600 font-black";
+      err.textContent = "تعذر تحميل الصور. تأكد من uploads/public/gallery.json وأسماء الصور.";
+      track.appendChild(err);
+    }
+  };
+
+  loadGallery();
+};
+
 
   // -------------------------
   // Boot
@@ -977,5 +1094,7 @@
     setupCountUps();
     setupCharts();
     setupHeatmap();
+    setupGallery();
+
   });
 })();
