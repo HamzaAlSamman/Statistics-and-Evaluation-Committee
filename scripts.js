@@ -42,91 +42,183 @@
     };
   };
 
-  // -------------------------
-  // Header + Mobile menu (robust)
-  // -------------------------
- const setupHeaderAndMenu = () => {
-  const btn = document.getElementById("menuBtn");
-  const nav = document.getElementById("nav");
-  const overlay = document.getElementById("navOverlay");
-
-  if (!btn || !nav) return;
-
-  let isOpen = false;
-  let lastFocus = null;
-
-  const focusableSelector =
-    'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
-
-  const setOpen = (open) => {
-    isOpen = !!open;
-
-    if (isOpen) lastFocus = document.activeElement;
-
-    nav.classList.toggle("open", isOpen);
-    overlay?.classList.toggle("open", isOpen);
-
-    btn.classList.toggle("is-open", isOpen);
-    document.body.classList.toggle("nav-open", isOpen);
-
-    btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
-    btn.setAttribute("aria-label", isOpen ? "إغلاق القائمة" : "فتح القائمة");
-
-    nav.setAttribute("aria-hidden", isOpen ? "false" : "true");
-    overlay?.setAttribute("aria-hidden", isOpen ? "false" : "true");
-
-    if (isOpen) {
-      // Move focus to first link for accessibility
-      const first = nav.querySelector(".nav-link");
-      first?.focus?.();
-    } else {
-      // Return focus back to menu button (or last focus)
-      (lastFocus && lastFocus.focus) ? lastFocus.focus() : btn.focus();
-    }
+  const isIOS = () => {
+    const ua = navigator.userAgent || "";
+    const iOSDevice =
+      /iPad|iPhone|iPod/.test(ua) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    return !!iOSDevice;
   };
 
-  btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    setOpen(!isOpen);
-  });
+  // -------------------------
+  // Header + Mobile menu (robust + iOS scroll lock)
+  // -------------------------
+  const setupHeaderAndMenu = () => {
+    const btn = document.getElementById("menuBtn");
+    const nav = document.getElementById("nav");
+    let overlay = document.getElementById("navOverlay");
 
-  overlay?.addEventListener("click", () => setOpen(false));
+    if (!btn || !nav) return;
 
-  nav.querySelectorAll(".nav-link").forEach((a) => {
-    a.addEventListener("click", () => setOpen(false));
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") setOpen(false);
-
-    // Basic focus trap when nav is open
-    if (!isOpen || e.key !== "Tab") return;
-
-    const focusables = Array.from(nav.querySelectorAll(focusableSelector));
-    if (!focusables.length) return;
-
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first.focus();
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.id = "navOverlay";
+      overlay.className = "nav-overlay";
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.appendChild(overlay);
     }
-  });
 
-  window.addEventListener(
-    "resize",
-    rafThrottle(() => {
-      if (!window.matchMedia("(max-width: 1024px)").matches) setOpen(false);
-    }),
-    { passive: true }
-  );
+    // Ensure overlay is always above page content but under nav
+    overlay.style.touchAction = "none";
 
-  setOpen(false);
-};
+    let isOpen = false;
+    let lastFocus = null;
+
+    // iOS: lock scroll reliably
+    let savedScrollY = 0;
+
+    const isMobile = () => window.matchMedia("(max-width: 1024px)").matches;
+
+    const focusableSelector =
+      'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+
+    const lockScroll = () => {
+      savedScrollY = window.scrollY || window.pageYOffset || 0;
+      document.body.classList.add("nav-open");
+
+      // iOS needs fixed body to prevent background scroll
+      if (isIOS()) {
+        document.body.style.position = "fixed";
+        document.body.style.width = "100%";
+        document.body.style.top = `-${savedScrollY}px`;
+        document.body.style.left = "0";
+        document.body.style.right = "0";
+      }
+    };
+
+    const unlockScroll = () => {
+      document.body.classList.remove("nav-open");
+
+      if (isIOS()) {
+        const top = document.body.style.top;
+        document.body.style.position = "";
+        document.body.style.width = "";
+        document.body.style.top = "";
+        document.body.style.left = "";
+        document.body.style.right = "";
+
+        const y = Math.abs(parseInt(top || "0", 10)) || savedScrollY || 0;
+        window.scrollTo(0, y);
+      }
+    };
+
+    const closeOtherPanelsIfAny = () => {
+      // If you have other overlays/panels, close them here to avoid click-blocking.
+      const hallPanel = document.getElementById("hallPanel");
+      const hallOverlay = document.getElementById("overlay");
+      if (hallPanel?.classList.contains("open")) {
+        hallPanel.classList.remove("open");
+        hallPanel.setAttribute("aria-hidden", "true");
+      }
+      if (hallOverlay?.classList.contains("open")) {
+        hallOverlay.classList.remove("open");
+        hallOverlay.setAttribute("aria-hidden", "true");
+      }
+    };
+
+    const setOpen = (open) => {
+      // Desktop: force closed
+      if (!isMobile()) open = false;
+
+      const next = !!open;
+      if (next === isOpen) return;
+      isOpen = next;
+
+      if (isOpen) {
+        closeOtherPanelsIfAny();
+        lastFocus = document.activeElement;
+        lockScroll();
+      } else {
+        unlockScroll();
+      }
+
+      nav.classList.toggle("open", isOpen);
+      overlay.classList.toggle("open", isOpen);
+
+      btn.classList.toggle("is-open", isOpen);
+
+      btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      btn.setAttribute("aria-label", isOpen ? "إغلاق القائمة" : "فتح القائمة");
+
+      nav.setAttribute("aria-hidden", isOpen ? "false" : "true");
+      overlay.setAttribute("aria-hidden", isOpen ? "false" : "true");
+
+      if (isOpen) {
+        const firstFocusable =
+          nav.querySelector(".nav-link") || nav.querySelector(focusableSelector);
+        firstFocusable?.focus?.();
+      } else {
+        if (lastFocus && typeof lastFocus.focus === "function") lastFocus.focus();
+        else btn.focus();
+      }
+    };
+
+    // Toggle by button
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      setOpen(!isOpen);
+    });
+
+    // Click on overlay closes
+    overlay.addEventListener("click", () => setOpen(false));
+
+    // Clicking a link closes (mobile)
+    nav.querySelectorAll(".nav-link").forEach((a) => {
+      a.addEventListener("click", () => setOpen(false));
+    });
+
+    // Close on outside click (extra safety, in case overlay isn't covering due to styling changes)
+    document.addEventListener("click", (e) => {
+      if (!isOpen) return;
+      if (!isMobile()) return;
+      const t = e.target;
+      if (nav.contains(t) || btn.contains(t) || overlay.contains(t)) return;
+      setOpen(false);
+    });
+
+    // Esc + focus trap
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setOpen(false);
+
+      if (!isOpen || !isMobile() || e.key !== "Tab") return;
+
+      const focusables = Array.from(nav.querySelectorAll(focusableSelector));
+      if (!focusables.length) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+
+    // Resize: close on desktop
+    window.addEventListener(
+      "resize",
+      rafThrottle(() => {
+        if (!isMobile()) setOpen(false);
+      }),
+      { passive: true }
+    );
+
+    // Init
+    setOpen(false);
+  };
 
   // -------------------------
   // Header shadow on scroll
@@ -255,7 +347,6 @@
     const core = raw.replace(prefix, "").replace(suffix, "").trim();
     if (!core) return null;
 
-    // Keep compact suffix as display suffix (do NOT multiply)
     const suffixUpper = String(suffix).toUpperCase();
     const isCompact = suffixUpper.includes("K") || suffixUpper.includes("M");
 
@@ -266,9 +357,9 @@
     const decimals = (core2.split(".")[1] || "").length;
 
     return {
-      value: num, // display value
+      value: num,
       prefix,
-      suffix: isCompact ? suffix : suffix, // keep as-is
+      suffix: isCompact ? suffix : suffix,
       decimals: clamp(decimals, 0, 6),
     };
   };
@@ -322,7 +413,6 @@
       const p = parseNumberText(el.textContent);
       if (!p) return;
 
-      // If percent: keep 0 decimals
       const isPercent = String(p.suffix).includes("%");
       const decimals = isPercent ? 0 : p.decimals;
 
@@ -463,37 +553,32 @@
     });
 
     createChart("delegationChart", {
-  type: "pie",
-  data: {
-    labels: ["رسمية سورية", "دولية", "نقابات وجامعات"],
-    datasets: [{ data: [45, 30, 25] }],
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "bottom",
-        labels: {
-          color: "#ffffff", 
-          font: {
-            size: 14 
-          }
-        }
+      type: "pie",
+      data: {
+        labels: ["رسمية سورية", "دولية", "نقابات وجامعات"],
+        datasets: [{ data: [45, 30, 25] }],
       },
-      tooltip: {
-        callbacks: {
-          title: function () {
-            return ''; 
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: "bottom",
+            labels: { color: "#ffffff", font: { size: 14 } },
           },
-          label: function (context) {
-            return context.label || '';
-          }
-        }
-      }
-    }
-  },
-});
+          tooltip: {
+            callbacks: {
+              title: function () {
+                return "";
+              },
+              label: function (context) {
+                return context.label || "";
+              },
+            },
+          },
+        },
+      },
+    });
 
     createChart("programChart", {
       type: "bar",
@@ -557,495 +642,555 @@
     });
   };
 
-  // -------------------------
-  // Heatmap / SVG (Hover = auto details)
-  // -------------------------
-  const setupHeatmap = () => {
-    const mapContainer = $("#map-container");
-    const svgMount = $("#svgMount");
-    const tooltip = $("#tooltip");
-    const slider = $("#timeSlider");
-    const playBtn = $("#playBtn");
-    const dateDisplay = $("#dateDisplay");
-    const counterSpan = $("#counterSpan");
+// -------------------------
+// Heatmap / SVG (Hover = auto details)
+// -------------------------
+const setupHeatmap = () => {
+  const mapContainer = document.querySelector("#map-container");
+  const svgMount = document.querySelector("#svgMount");
+  const tooltip = document.querySelector("#tooltip");
+  const slider = document.querySelector("#timeSlider");
+  const playBtn = document.querySelector("#playBtn");
+  const dateDisplay = document.querySelector("#dateDisplay");
+  const counterSpan = document.querySelector("#counterSpan");
 
-    if (!mapContainer || !svgMount || !tooltip || !slider || !playBtn || !dateDisplay || !counterSpan) return;
+  if (!mapContainer || !svgMount || !tooltip || !slider || !playBtn || !dateDisplay || !counterSpan) return;
 
-    const hallPanel = $("#hallPanel");
-    const overlay = $("#overlay");
-    const hallPanelClose = $("#hallPanelClose");
-    const hallPanelTitle = $("#hallPanelTitle");
-    const hallPanelSub = $("#hallPanelSub");
-    const hallMetricDensity = $("#hallMetricDensity");
-    const hallMetricVisitors = $("#hallMetricVisitors");
-    const hallMetricEvents = $("#hallMetricEvents");
+  const hallPanel = document.querySelector("#hallPanel");
+  const overlay = document.querySelector("#overlay");
+  const hallPanelClose = document.querySelector("#hallPanelClose");
+  const hallPanelTitle = document.querySelector("#hallPanelTitle");
+  const hallPanelSub = document.querySelector("#hallPanelSub");
+  const hallMetricDensity = document.querySelector("#hallMetricDensity");
+  const hallMetricVisitors = document.querySelector("#hallMetricVisitors");
+  const hallMetricEvents = document.querySelector("#hallMetricEvents");
 
-    const setOverlay = (open) => {
-      if (!overlay) return;
-      overlay.classList.toggle("open", open);
-      overlay.setAttribute("aria-hidden", open ? "false" : "true");
-    };
+  // دعم تقليل الحركة في المتصفح
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+  const formatNumber = (num) => new Intl.NumberFormat('en-US').format(num);
 
-    const setPanel = (open) => {
-      if (!hallPanel) return;
-      hallPanel.classList.toggle("open", open);
-      hallPanel.setAttribute("aria-hidden", open ? "false" : "true");
-      setOverlay(open);
-    };
+  const setOverlay = (open) => {
+    if (!overlay) return;
+    overlay.classList.toggle("open", open);
+    overlay.setAttribute("aria-hidden", open ? "false" : "true");
+  };
 
-    overlay?.addEventListener("click", () => setPanel(false));
-    hallPanelClose?.addEventListener("click", () => setPanel(false));
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") setPanel(false);
+  const setPanel = (open) => {
+    if (!hallPanel) return;
+    hallPanel.classList.toggle("open", open);
+    hallPanel.setAttribute("aria-hidden", open ? "false" : "true");
+    setOverlay(open);
+  };
+
+  overlay?.addEventListener("click", () => setPanel(false));
+  hallPanelClose?.addEventListener("click", () => setPanel(false));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setPanel(false);
+  });
+
+  const hallNames = {
+    H1: "القاعة الأولى",
+    H2: "قاعة الطفل (الثالثة)",
+    H10: "قاعة الشباب (الرابعة)",
+    H11: "القاعة السادسة",
+    H25: "قاعة الفكر (الثانية)",
+    H26: "قاعة المعرفة (الخامسة)",
+    H27: "صالة المطاعم",
+    H28: "قاعة الفعاليات الثالثة",
+    "H1.1": "منتدى دمشق الثقافي",
+    "H10.1": "الصالون الثقافي",
+    H41: "قاعة الجامعات الخاصة",
+    "12": "القاعة 12",
+    VIP: "القاعة الرئاسية (VIP)",
+    PR: "المركز الإعلامي",
+  };
+
+  // البيانات المحدثة بإجمالي 1,290,000 زائر بالضبط
+  const dailyData = [
+    { day: "6 شباط (الافتتاح)", target: 158450, events: { "H1.1": 5, "H10.1": 4, H28: 4 },
+      densities: { H1: 90, H2: 95, H10: 95, H11: 85, H25: 88, H26: 80, H27: 85, H28: 75, "H1.1": 60, "H10.1": 45, H41: 45, "12": 40, VIP: 10, PR: 45 } },
+    { day: "7 شباط", target: 47563, events: { "H1.1": 9, "H10.1": 8, H28: 6 },
+      densities: { H1: 70, H2: 88, H10: 85, H11: 60, H25: 65, H26: 55, H27: 65, H28: 80, "H1.1": 85, "H10.1": 85, H41: 45, "12": 40, VIP: 8, PR: 45 } },
+    { day: "8 شباط", target: 65725, events: { "H1.1": 9, "H10.1": 3, H28: 4 },
+      densities: { H1: 80, H2: 95, H10: 92, H11: 70, H25: 75, H26: 65, H27: 75, H28: 60, "H1.1": 85, "H10.1": 45, H41: 55, "12": 50, VIP: 12, PR: 50 } },
+    { day: "9 شباط", target: 82300, events: { "H1.1": 4, "H10.1": 2, H28: 3 },
+      densities: { H1: 82, H2: 96, H10: 95, H11: 72, H25: 78, H26: 68, H27: 78, H28: 50, "H1.1": 55, "H10.1": 35, H41: 60, "12": 55, VIP: 10, PR: 55 } },
+    { day: "10 شباط", target: 94150, events: { "H1.1": 4, "H10.1": 3, H28: 5 },
+      densities: { H1: 85, H2: 98, H10: 96, H11: 75, H25: 82, H26: 72, H27: 82, H28: 65, "H1.1": 55, "H10.1": 45, H41: 35, "12": 30, VIP: 5, PR: 35 } },
+    { day: "11 شباط", target: 112600, events: { "H1.1": 4, "H10.1": 2, H28: 5 },
+      densities: { H1: 88, H2: 100, H10: 98, H11: 80, H25: 85, H26: 78, H27: 85, H28: 65, "H1.1": 55, "H10.1": 35, H41: 40, "12": 35, VIP: 6, PR: 40 } },
+    { day: "12 شباط", target: 158400, events: { "H1.1": 5, "H10.1": 3, H28: 5 },
+      densities: { H1: 90, H2: 100, H10: 100, H11: 85, H25: 90, H26: 85, H27: 90, H28: 80, "H1.1": 65, "H10.1": 45, H41: 45, "12": 40, VIP: 8, PR: 45 } },
+    { day: "13 شباط (ذروة الزحام)", target: 245500, events: { "H1.1": 8, "H10.1": 6, H28: 7 },
+      densities: { H1: 98, H2: 100, H10: 100, H11: 95, H25: 98, H26: 96, H27: 98, H28: 95, "H1.1": 92, "H10.1": 88, H41: 85, "12": 87, VIP: 15, PR: 90 } },
+    { day: "14 شباط", target: 155000, events: { "H1.1": 5, "H10.1": 4, H28: 4 },
+      densities: { H1: 88, H2: 92, H10: 90, H11: 80, H25: 85, H26: 75, H27: 85, H28: 70, "H1.1": 65, "H10.1": 40, H41: 50, "12": 45, VIP: 10, PR: 40 } },
+    { day: "15 شباط", target: 125012, events: { "H1.1": 3, "H10.1": 3, H28: 4 },
+      densities: { H1: 82, H2: 88, H10: 85, H11: 75, H25: 80, H26: 70, H27: 78, H28: 65, "H1.1": 50, "H10.1": 35, H41: 40, "12": 40, VIP: 8, PR: 35 } },
+    { day: "16 شباط (الختام)", target: 45300, events: { "H1.1": 1, "H10.1": 1, H28: 1 },
+      densities: { H1: 45, H2: 65, H10: 60, H11: 35, H25: 40, H26: 30, H27: 55, H28: 30, "H1.1": 25, "H10.1": 25, H41: 15, "12": 15, VIP: 3, PR: 25 } },
+  ];
+
+  const getHeatColor = (value) => {
+    const v = Number(value) || 0;
+    if (v >= 85) return "rgba(215, 48, 39, 0.85)";
+    if (v >= 70) return "rgba(252, 141, 89, 0.85)";
+    if (v >= 50) return "rgba(254, 224, 139, 0.85)";
+    if (v >= 30) return "rgba(166, 217, 106, 0.85)";
+    return "rgba(26, 152, 80, 0.85)";
+  };
+
+  const seeded01 = (seedStr) => {
+    let h = 2166136261;
+    for (let i = 0; i < seedStr.length; i++) {
+      h ^= seedStr.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    h ^= h << 13; h ^= h >> 17; h ^= h << 5;
+    return ((h >>> 0) % 10000) / 10000;
+  };
+
+  const computeVisitorsForDay = (dayIndex) => {
+    const today = dailyData[dayIndex];
+    const totalTarget = today.target;
+
+    const fixedRooms = ["VIP", "PR", "H41", "H1.1", "H10.1", "H28"];
+
+    const vipDensity = today.densities.VIP ?? 5;
+    const prDensity = today.densities.PR ?? 40;
+    const h41Density = today.densities.H41 ?? 40;
+
+    const vipVisitors = Math.floor(20 + (vipDensity / 100) * 170);
+    const prVisitors = Math.floor(200 + (prDensity / 100) * 200);
+    const h41Visitors = Math.floor(300 + (h41Density / 100) * 400);
+
+    const out = { VIP: vipVisitors, PR: prVisitors, H41: h41Visitors };
+
+    const eventHalls = ["H1.1", "H10.1", "H28"];
+    let eventsVisitorsTotal = 0;
+
+    eventHalls.forEach((hall) => {
+      const numEvents = today.events[hall] ?? 0;
+      if (numEvents > 0) {
+        const seed = seeded01(`${dayIndex}:${hall}`);
+        let occupancy = 0.60 + seed * 0.35;
+        if ((today.densities[hall] ?? 0) >= 80) occupancy = 0.90 + seed * 0.08;
+        const hallVisitors = Math.floor(numEvents * 250 * occupancy);
+        out[hall] = hallVisitors;
+        eventsVisitorsTotal += hallVisitors;
+      } else {
+        out[hall] = Math.floor(10 + seeded01(`${dayIndex}:${hall}:idle`) * 50);
+      }
     });
 
-    const hallNames = {
-      H1: "القاعة الأولى",
-      H2: "قاعة الطفل (الثالثة)",
-      H10: "قاعة الشباب (الرابعة)",
-      H11: "القاعة السادسة",
-      H25: "قاعة الفكر (الثانية)",
-      H26: "قاعة المعرفة (الخامسة)",
-      H27: "صالة المطاعم",
-      H28: "قاعة الفعاليات الثالثة",
-      "H1.1": "منتدى دمشق الثقافي",
-      "H10.1": "الصالون الثقافي",
-      H41: "قاعة الجامعات الخاصة",
-      "12": "القاعة 12",
-      VIP: "القاعة الرئاسية (VIP)",
-      PR: "المركز الإعلامي",
+    const remaining = totalTarget - (vipVisitors + prVisitors + h41Visitors + eventsVisitorsTotal);
+
+    let sumDensities = 0;
+    const roomKeys = Object.keys(today.densities).filter((id) => !fixedRooms.includes(id));
+    roomKeys.forEach((id) => (sumDensities += (today.densities[id] ?? 0)));
+    sumDensities = sumDensities || 1;
+
+    let cur = 0;
+    roomKeys.forEach((id, idx) => {
+      const density = today.densities[id] ?? 0;
+      let alloc = Math.floor(remaining * (density / sumDensities));
+      if (idx === roomKeys.length - 1) alloc = remaining - cur;
+      out[id] = alloc;
+      cur += alloc;
+    });
+
+    return out;
+  };
+
+  const positionTooltip = (e) => {
+    const rect = mapContainer.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const ttW = tooltip.offsetWidth || 220;
+    const ttH = tooltip.offsetHeight || 110;
+
+    const pad = 12;
+    const offset = 18;
+
+    let left = x + offset;
+    let top = y + offset;
+
+    if (left + ttW + pad > rect.width) left = x - ttW - offset;
+    if (top + ttH + pad > rect.height) top = y - ttH - offset;
+
+    left = clamp(left, pad, rect.width - ttW - pad);
+    top = clamp(top, pad, rect.height - ttH - pad);
+
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+  };
+
+  const animateCounter = (el, endValue) => {
+    const end = Number(endValue) || 0;
+    const dur = prefersReducedMotion ? 0 : 520;
+    const t0 = performance.now();
+
+    const step = (t) => {
+      const p = dur === 0 ? 1 : clamp((t - t0) / dur, 0, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const v = Math.round(end * eased);
+      el.textContent = formatNumber(v);
+      if (p < 1) requestAnimationFrame(step);
     };
+    requestAnimationFrame(step);
+  };
 
-    const dailyData = [
-      { day: "6 شباط (الافتتاح)", target: 158450, events: { "H1.1": 5, "H10.1": 4, H28: 4 },
-        densities: { H1: 90, H2: 95, H10: 95, H11: 85, H25: 88, H26: 80, H27: 85, H28: 75, "H1.1": 60, "H10.1": 45, H41: 45, "12": 40, VIP: 10, PR: 45 } },
-      { day: "7 شباط", target: 47563, events: { "H1.1": 9, "H10.1": 8, H28: 6 },
-        densities: { H1: 70, H2: 88, H10: 85, H11: 60, H25: 65, H26: 55, H27: 65, H28: 80, "H1.1": 85, "H10.1": 85, H41: 45, "12": 40, VIP: 8, PR: 45 } },
-      { day: "8 شباط", target: 65725, events: { "H1.1": 9, "H10.1": 3, H28: 4 },
-        densities: { H1: 80, H2: 95, H10: 92, H11: 70, H25: 75, H26: 65, H27: 75, H28: 60, "H1.1": 85, "H10.1": 45, H41: 55, "12": 50, VIP: 12, PR: 50 } },
-      { day: "9 شباط", target: 82300, events: { "H1.1": 4, "H10.1": 2, H28: 3 },
-        densities: { H1: 82, H2: 96, H10: 95, H11: 72, H25: 78, H26: 68, H27: 78, H28: 50, "H1.1": 55, "H10.1": 35, H41: 60, "12": 55, VIP: 10, PR: 55 } },
-      { day: "10 شباط", target: 94150, events: { "H1.1": 4, "H10.1": 3, H28: 5 },
-        densities: { H1: 85, H2: 98, H10: 96, H11: 75, H25: 82, H26: 72, H27: 82, H28: 65, "H1.1": 55, "H10.1": 45, H41: 35, "12": 30, VIP: 5, PR: 35 } },
-      { day: "11 شباط", target: 112600, events: { "H1.1": 4, "H10.1": 2, H28: 5 },
-        densities: { H1: 88, H2: 100, H10: 98, H11: 80, H25: 85, H26: 78, H27: 85, H28: 65, "H1.1": 55, "H10.1": 35, H41: 40, "12": 35, VIP: 6, PR: 40 } },
-      { day: "12 شباط", target: 158400, events: { "H1.1": 5, "H10.1": 3, H28: 5 },
-        densities: { H1: 90, H2: 100, H10: 100, H11: 85, H25: 90, H26: 85, H27: 90, H28: 80, "H1.1": 65, "H10.1": 45, H41: 45, "12": 40, VIP: 8, PR: 45 } },
-      { day: "13 شباط (ذروة الزحام)", target: 245500, events: { "H1.1": 8, "H10.1": 6, H28: 7 },
-        densities: { H1: 98, H2: 100, H10: 100, H11: 95, H25: 98, H26: 96, H27: 98, H28: 95, "H1.1": 92, "H10.1": 88, H41: 85, "12": 87, VIP: 15, PR: 90 } },
-      { day: "14 شباط", target: 50, events: { "H1.1": 0, "H10.1": 0, H28: 0 },
-        densities: { H1: 2, H2: 5, H10: 3, H11: 1, H25: 2, H26: 1, H27: 2, H28: 1, "H1.1": 1, "H10.1": 1, H41: 1, "12": 1, VIP: 1, PR: 1 } },
-      { day: "15 شباط", target: 50, events: { "H1.1": 0, "H10.1": 0, H28: 0 },
-        densities: { H1: 1, H2: 2, H10: 1, H11: 1, H25: 1, H26: 1, H27: 1, H28: 1, "H1.1": 1, "H10.1": 1, H41: 1, "12": 1, VIP: 1, PR: 1 } },
-      { day: "16 شباط (الختام)", target: 45300, events: { "H1.1": 1, "H10.1": 1, H28: 1 },
-        densities: { H1: 45, H2: 65, H10: 60, H11: 35, H25: 40, H26: 30, H27: 55, H28: 30, "H1.1": 25, "H10.1": 25, H41: 15, "12": 15, VIP: 3, PR: 25 } },
-    ];
+  const applyFillDeep = (rootEl, color) => {
+    if (!rootEl) return;
+    rootEl.style.setProperty("fill", color, "important");
+    const inner = rootEl.querySelectorAll?.("rect, polygon, path, circle, ellipse");
+    inner?.forEach((n) => n.style.setProperty("fill", color, "important"));
+  };
 
-    const getHeatColor = (value) => {
-      const v = Number(value) || 0;
-      if (v >= 85) return "rgba(215, 48, 39, 0.85)";
-      if (v >= 70) return "rgba(252, 141, 89, 0.85)";
-      if (v >= 50) return "rgba(254, 224, 139, 0.85)";
-      if (v >= 30) return "rgba(166, 217, 106, 0.85)";
-      return "rgba(26, 152, 80, 0.85)";
-    };
+  let calculatedVisitors = {};
+  let hoverCloseTimer = null;
 
-    // Stable PRNG
-    const seeded01 = (seedStr) => {
-      let h = 2166136261;
-      for (let i = 0; i < seedStr.length; i++) {
-        h ^= seedStr.charCodeAt(i);
-        h = Math.imul(h, 16777619);
+  const openPanelWithData = (roomId, dayIdx, density) => {
+    const activeDay = dailyData[dayIdx];
+    const vis = calculatedVisitors?.[roomId] ?? 0;
+    const ev = activeDay?.events?.[roomId] ?? 0;
+    const d = Number(density ?? activeDay?.densities?.[roomId] ?? 0);
+
+    if (hallPanelTitle) hallPanelTitle.textContent = hallNames[roomId] || roomId;
+    if (hallPanelSub) hallPanelSub.textContent = activeDay?.day ?? "";
+    if (hallMetricDensity) hallMetricDensity.textContent = `${formatNumber(d)}%`;
+    if (hallMetricVisitors) hallMetricVisitors.textContent = formatNumber(vis);
+    if (hallMetricEvents) hallMetricEvents.textContent = formatNumber(ev);
+
+    setPanel(true);
+  };
+
+  const bindHall = (roomId, el) => {
+    if (!el || el.dataset.bound) return;
+    el.dataset.bound = "1";
+
+    // ✅ إصلاح iOS: إزالة الـ filter تماماً والاعتماد على الحدود فقط
+    const setHoverStroke = (on) => {
+      if (!on) {
+        el.style.removeProperty("stroke");
+        el.style.removeProperty("stroke-width");
+        return;
       }
-      h ^= h << 13; h ^= h >> 17; h ^= h << 5;
-      return ((h >>> 0) % 10000) / 10000;
+      el.style.setProperty("stroke", "rgba(15,23,42,.90)", "important");
+      el.style.setProperty("stroke-width", "4px", "important"); 
     };
 
-    const computeVisitorsForDay = (dayIndex) => {
-      const today = dailyData[dayIndex];
-      const totalTarget = today.target;
+    // ✅ تحديث البيانات عند الدخول فقط لمنع اختناق الـ DOM
+    el.addEventListener("mouseenter", (e) => {
+      clearTimeout(hoverCloseTimer);
+      setHoverStroke(true);
 
-      const fixedRooms = ["VIP", "PR", "H41", "H1.1", "H10.1", "H28"];
-
-      const vipDensity = today.densities.VIP ?? 5;
-      const prDensity = today.densities.PR ?? 40;
-      const h41Density = today.densities.H41 ?? 40;
-
-      const vipVisitors = Math.floor(20 + (vipDensity / 100) * 170);
-      const prVisitors = Math.floor(200 + (prDensity / 100) * 200);
-      const h41Visitors = Math.floor(300 + (h41Density / 100) * 400);
-
-      const out = { VIP: vipVisitors, PR: prVisitors, H41: h41Visitors };
-
-      const eventHalls = ["H1.1", "H10.1", "H28"];
-      let eventsVisitorsTotal = 0;
-
-      eventHalls.forEach((hall) => {
-        const numEvents = today.events[hall] ?? 0;
-        if (numEvents > 0) {
-          const seed = seeded01(`${dayIndex}:${hall}`);
-          let occupancy = 0.60 + seed * 0.35;
-          if ((today.densities[hall] ?? 0) >= 80) occupancy = 0.90 + seed * 0.08;
-          const hallVisitors = Math.floor(numEvents * 250 * occupancy);
-          out[hall] = hallVisitors;
-          eventsVisitorsTotal += hallVisitors;
-        } else {
-          out[hall] = Math.floor(10 + seeded01(`${dayIndex}:${hall}:idle`) * 50);
-        }
-      });
-
-      const remaining = totalTarget - (vipVisitors + prVisitors + h41Visitors + eventsVisitorsTotal);
-
-      let sumDensities = 0;
-      const roomKeys = Object.keys(today.densities).filter((id) => !fixedRooms.includes(id));
-      roomKeys.forEach((id) => (sumDensities += (today.densities[id] ?? 0)));
-      sumDensities = sumDensities || 1;
-
-      let cur = 0;
-      roomKeys.forEach((id, idx) => {
-        const density = today.densities[id] ?? 0;
-        let alloc = Math.floor(remaining * (density / sumDensities));
-        if (idx === roomKeys.length - 1) alloc = remaining - cur;
-        out[id] = alloc;
-        cur += alloc;
-      });
-
-      return out;
-    };
-
-    // Tooltip positioning (clamped inside map)
-    const positionTooltip = (e) => {
-      const rect = mapContainer.getBoundingClientRect();
-
-      // Cursor position relative to the map container
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      // Tooltip size (still measurable when hidden via opacity)
-      const ttW = tooltip.offsetWidth || 220;
-      const ttH = tooltip.offsetHeight || 110;
-
-      const pad = 12;
-      const offset = 18;
-
-      // Default: bottom-right of cursor
-      let left = x + offset;
-      let top = y + offset;
-
-      // Flip when close to edges
-      if (left + ttW + pad > rect.width) left = x - ttW - offset;
-      if (top + ttH + pad > rect.height) top = y - ttH - offset;
-
-      // Clamp inside container
-      left = clamp(left, pad, rect.width - ttW - pad);
-      top = clamp(top, pad, rect.height - ttH - pad);
-
-      tooltip.style.left = `${left}px`;
-      tooltip.style.top = `${top}px`;
-    };
-
-    const animateCounter = (el, endValue) => {
-      const end = Number(endValue) || 0;
-      const dur = prefersReducedMotion ? 0 : 520;
-      const t0 = performance.now();
-
-      const step = (t) => {
-        const p = dur === 0 ? 1 : clamp((t - t0) / dur, 0, 1);
-        const eased = 1 - Math.pow(1 - p, 3);
-        const v = Math.round(end * eased);
-        el.textContent = formatNumber(v);
-        if (p < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    };
-
-    const applyFillDeep = (rootEl, color) => {
-      if (!rootEl) return;
-      rootEl.style.setProperty("fill", color, "important");
-      const inner = rootEl.querySelectorAll?.("rect, polygon, path, circle, ellipse");
-      inner?.forEach((n) => n.style.setProperty("fill", color, "important"));
-    };
-
-    let calculatedVisitors = {};
-    let hoverCloseTimer = null;
-
-    const openPanelWithData = (roomId, dayIdx, density) => {
+      const dayIdx = Number(slider.value) || 0;
       const activeDay = dailyData[dayIdx];
+      const d = activeDay?.densities?.[roomId] ?? 0;
       const vis = calculatedVisitors?.[roomId] ?? 0;
-      const ev = activeDay?.events?.[roomId] ?? 0;
-      const d = Number(density ?? activeDay?.densities?.[roomId] ?? 0);
 
-      if (hallPanelTitle) hallPanelTitle.textContent = hallNames[roomId] || roomId;
-      if (hallPanelSub) hallPanelSub.textContent = activeDay?.day ?? "";
-      if (hallMetricDensity) hallMetricDensity.textContent = `${formatNumber(d)}%`;
-      if (hallMetricVisitors) hallMetricVisitors.textContent = formatNumber(vis);
-      if (hallMetricEvents) hallMetricEvents.textContent = formatNumber(ev);
+      const ttName = document.querySelector("#tt-name");
+      const densityVal = document.querySelector("#densityVal");
+      const visitorsVal = document.querySelector("#visitorsVal");
 
-      setPanel(true);
-    };
+      if (ttName) ttName.textContent = hallNames[roomId] || roomId;
+      if (densityVal) densityVal.textContent = `${formatNumber(d)}%`;
+      if (visitorsVal) visitorsVal.textContent = formatNumber(vis);
 
-    const bindHall = (roomId, el) => {
-      if (!el || el.dataset.bound) return;
-      el.dataset.bound = "1";
-
-      // Hover highlight
-      const setHoverStroke = (on) => {
-        if (!on) {
-          el.style.removeProperty("stroke");
-          el.style.removeProperty("stroke-width");
-          el.style.removeProperty("filter");
-          return;
-        }
-        el.style.setProperty("stroke", "rgba(15,23,42,.75)", "important");
-        el.style.setProperty("stroke-width", "2px", "important");
-        el.style.setProperty("filter", "drop-shadow(0 10px 20px rgba(2,6,23,.14))", "important");
-      };
-
-      el.addEventListener("mousemove", (e) => {
+      if (e) {
         positionTooltip(e);
-
-        const dayIdx = Number(slider.value) || 0;
-        const activeDay = dailyData[dayIdx];
-        const d = activeDay?.densities?.[roomId] ?? 0;
-        const vis = calculatedVisitors?.[roomId] ?? 0;
-
-        $("#tt-name") && ($("#tt-name").textContent = hallNames[roomId] || roomId);
-        $("#densityVal") && ($("#densityVal").textContent = `${formatNumber(d)}%`);
-        $("#visitorsVal") && ($("#visitorsVal").textContent = formatNumber(vis));
-
         tooltip.setAttribute("aria-hidden", "false");
-      });
+      }
 
-      el.addEventListener("mouseleave", () => {
-        tooltip.setAttribute("aria-hidden", "true");
-        setHoverStroke(false);
+      openPanelWithData(roomId, dayIdx, d);
+    });
 
-        // Close panel after small delay (prevents flicker)
-        clearTimeout(hoverCloseTimer);
-        hoverCloseTimer = setTimeout(() => setPanel(false), 220);
-      });
+    // ✅ إصلاح iOS: استخدام requestAnimationFrame لحركة التولتيب وفصلها عن النصوص
+    el.addEventListener("mousemove", (e) => {
+      requestAnimationFrame(() => positionTooltip(e));
+    });
 
-      el.addEventListener("mouseenter", (e) => {
-        clearTimeout(hoverCloseTimer);
-        setHoverStroke(true);
+    el.addEventListener("mouseleave", () => {
+      tooltip.setAttribute("aria-hidden", "true");
+      setHoverStroke(false);
 
-        // Show tooltip immediately on enter (not only after first mousemove)
-        if (e) {
-          positionTooltip(e);
+      clearTimeout(hoverCloseTimer);
+      hoverCloseTimer = setTimeout(() => setPanel(false), 220);
+    });
 
-          const dayIdx = Number(slider.value) || 0;
-          const activeDay = dailyData[dayIdx];
-          const d = activeDay?.densities?.[roomId] ?? 0;
-          const vis = calculatedVisitors?.[roomId] ?? 0;
-
-          $("#tt-name") && ($("#tt-name").textContent = hallNames[roomId] || roomId);
-          $("#densityVal") && ($("#densityVal").textContent = `${formatNumber(d)}%`);
-          $("#visitorsVal") && ($("#visitorsVal").textContent = formatNumber(vis));
-
-          tooltip.setAttribute("aria-hidden", "false");
-        }
-
+    // دعم الهواتف المحمولة
+    el.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "touch") {
         const dayIdx = Number(slider.value) || 0;
         const activeDay = dailyData[dayIdx];
         const density = activeDay?.densities?.[roomId] ?? 0;
-
-        // Auto-open details on hover
         openPanelWithData(roomId, dayIdx, density);
-      });
-
-      // Mobile fallback: touch/click opens
-      el.addEventListener("pointerdown", (e) => {
-        if (e.pointerType === "touch") {
-          const dayIdx = Number(slider.value) || 0;
-          const activeDay = dailyData[dayIdx];
-          const density = activeDay?.densities?.[roomId] ?? 0;
-          openPanelWithData(roomId, dayIdx, density);
-        }
-      });
-    };
-
-    const updateMap = (dayIndex) => {
-      const idx = clamp(Number(dayIndex) || 0, 0, dailyData.length - 1);
-      const today = dailyData[idx];
-
-      dateDisplay.textContent = today.day;
-      calculatedVisitors = computeVisitorsForDay(idx);
-
-      Object.entries(today.densities).forEach(([roomId, density]) => {
-        const el = document.getElementById(roomId);
-        if (!el) return;
-        applyFillDeep(el, getHeatColor(density));
-        bindHall(roomId, el);
-      });
-
-      animateCounter(counterSpan, today.target);
-    };
-
-    const bootIfSVGExists = () => {
-      const hasSVG = !!$("svg", svgMount);
-      if (!hasSVG) return false;
-
-      slider.min = "0";
-      slider.max = String(dailyData.length - 1);
-      slider.step = "1";
-
-      slider.addEventListener("input", () => updateMap(slider.value), { passive: true });
-
-      let isPlaying = false;
-      let playTimer = null;
-
-      const setPlayUI = () => {
-        playBtn.textContent = isPlaying ? "إيقاف مؤقت" : "تشغيل العرض";
-        playBtn.setAttribute("aria-pressed", isPlaying ? "true" : "false");
-      };
-
-      const stopPlay = () => {
-        isPlaying = false;
-        if (playTimer) clearTimeout(playTimer);
-        playTimer = null;
-        setPlayUI();
-      };
-
-      const runPlay = () => {
-        if (!isPlaying) return;
-
-        const cur = Number(slider.value) || 0;
-        if (cur >= dailyData.length - 1) {
-          stopPlay();
-          playBtn.textContent = "إرجاع للبداية";
-          return;
-        }
-
-        slider.value = String(cur + 1);
-        updateMap(slider.value);
-
-        playTimer = setTimeout(runPlay, prefersReducedMotion ? 0 : 1400);
-      };
-
-      playBtn.addEventListener("click", () => {
-        if (!isPlaying && playBtn.textContent.includes("إرجاع")) {
-          slider.value = "0";
-          updateMap(0);
-          playBtn.textContent = "تشغيل العرض";
-        }
-
-        isPlaying = !isPlaying;
-        setPlayUI();
-
-        if (isPlaying) {
-          if (Number(slider.value) >= dailyData.length - 1) {
-            slider.value = "0";
-            updateMap(0);
-          }
-          runPlay();
-        } else {
-          stopPlay();
-        }
-      });
-
-      // Keep panel open if user hovers it
-      hallPanel?.addEventListener("mouseenter", () => {
-        clearTimeout(hoverCloseTimer);
-      });
-      hallPanel?.addEventListener("mouseleave", () => {
-        clearTimeout(hoverCloseTimer);
-        hoverCloseTimer = setTimeout(() => setPanel(false), 220);
-      });
-
-      updateMap(0);
-      return true;
-    };
-
-    if (!bootIfSVGExists()) {
-      const mo = new MutationObserver(() => {
-        if (bootIfSVGExists()) mo.disconnect();
-      });
-      mo.observe(svgMount, { childList: true, subtree: true });
-    }
+      }
+    });
   };
 
-    // -------------------------
-  // Gallery (public images + pending uploads)
-  // Requires backend endpoints:
-  //   ./gallery/list.php  -> returns { files: ["a.jpg", ...] }
-  //   ./gallery/upload.php -> accepts multipart, saves to uploads/pending
-  // -------------------------
-const setupGallery = () => {
-  const track = document.getElementById("galleryTrack");
-  const wrapper = document.querySelector(".gallery-wrapper");
-  if (!track || !wrapper) return;
+  const updateMap = (dayIndex) => {
+    const idx = clamp(Number(dayIndex) || 0, 0, dailyData.length - 1);
+    const today = dailyData[idx];
 
-  const guessGhBase = () => {
-    const parts = location.pathname.split("/").filter(Boolean);
-    if (!location.hostname.endsWith("github.io")) return "";
-    if (!parts.length) return "";
-    const first = parts[0];
-    const reserved = new Set(["uploads","gallery","assets","css","js","img","images"]);
-    if (reserved.has(first.toLowerCase())) return "";
-    return `/${first}`;
+    dateDisplay.textContent = today.day;
+    calculatedVisitors = computeVisitorsForDay(idx);
+
+    Object.entries(today.densities).forEach(([roomId, density]) => {
+      const el = document.getElementById(roomId);
+      if (!el) return;
+      applyFillDeep(el, getHeatColor(density));
+      bindHall(roomId, el);
+    });
+
+    animateCounter(counterSpan, today.target);
   };
 
-  const GH_BASE = guessGhBase();
-  const LIST_URL = `${GH_BASE}/uploads/public/gallery.json`;
-  const PUBLIC_DIR = `${GH_BASE}/uploads/public/`;
+  const bootIfSVGExists = () => {
+    const hasSVG = !!document.querySelector("#svgMount svg");
+    if (!hasSVG) return false;
 
-  const buildItem = (filename) => {
-    const wrap = document.createElement("div");
-    wrap.className = "gallery-item";
-    const img = document.createElement("img");
-    img.loading = "lazy";
-    img.alt = "صورة من المعرض";
-    img.src = PUBLIC_DIR + encodeURIComponent(filename);
-    wrap.appendChild(img);
-    return wrap;
-  };
+    slider.min = "0";
+    slider.max = String(dailyData.length - 1);
+    slider.step = "1";
 
-  const loadGallery = async () => {
-    track.innerHTML = "";
+    slider.addEventListener("input", () => updateMap(slider.value), { passive: true });
 
-    try {
-      const r = await fetch(LIST_URL, { cache: "no-store" });
-      if (!r.ok) throw new Error(String(r.status));
-      const data = await r.json();
-      const files = Array.isArray(data.files) ? data.files : [];
+    let isPlaying = false;
+    let playTimer = null;
 
-      if (!files.length) {
-        const empty = document.createElement("div");
-        empty.className = "text-center w-full py-8 text-slate-500 font-bold";
-        empty.textContent = "لا توجد صور منشورة حالياً.";
-        track.appendChild(empty);
+    const setPlayUI = () => {
+      playBtn.textContent = isPlaying ? "إيقاف مؤقت" : "تشغيل العرض";
+      playBtn.setAttribute("aria-pressed", isPlaying ? "true" : "false");
+    };
+
+    const stopPlay = () => {
+      isPlaying = false;
+      if (playTimer) clearTimeout(playTimer);
+      playTimer = null;
+      setPlayUI();
+    };
+
+    const runPlay = () => {
+      if (!isPlaying) return;
+
+      const cur = Number(slider.value) || 0;
+      if (cur >= dailyData.length - 1) {
+        stopPlay();
+        playBtn.textContent = "إرجاع للبداية";
         return;
       }
 
-      // set 1
-      const set1 = document.createElement("div");
-      set1.className = "gallery-set";
-      set1.dataset.set = "1";
-      files.forEach((f) => set1.appendChild(buildItem(f)));
+      slider.value = String(cur + 1);
+      updateMap(slider.value);
 
-      // set 2 (clone)
-      const set2 = set1.cloneNode(true);
-      set2.dataset.set = "2";
+      playTimer = setTimeout(runPlay, prefersReducedMotion ? 0 : 1400);
+    };
 
-      track.appendChild(set1);
-      track.appendChild(set2);
-    } catch {
-      const err = document.createElement("div");
-      err.className = "text-center w-full py-8 text-rose-600 font-black";
-      err.textContent = "تعذر تحميل الصور. تحقق من uploads/public/gallery.json وأسماء الصور.";
-      track.appendChild(err);
-    }
+    playBtn.addEventListener("click", () => {
+      if (!isPlaying && playBtn.textContent.includes("إرجاع")) {
+        slider.value = "0";
+        updateMap(0);
+        playBtn.textContent = "تشغيل العرض";
+      }
+
+      isPlaying = !isPlaying;
+      setPlayUI();
+
+      if (isPlaying) {
+        if (Number(slider.value) >= dailyData.length - 1) {
+          slider.value = "0";
+          updateMap(0);
+        }
+        runPlay();
+      } else {
+        stopPlay();
+      }
+    });
+
+    hallPanel?.addEventListener("mouseenter", () => {
+      clearTimeout(hoverCloseTimer);
+    });
+    hallPanel?.addEventListener("mouseleave", () => {
+      clearTimeout(hoverCloseTimer);
+      hoverCloseTimer = setTimeout(() => setPanel(false), 220);
+    });
+
+    updateMap(0);
+    return true;
   };
 
-  loadGallery();
+  if (!bootIfSVGExists()) {
+    const mo = new MutationObserver(() => {
+      if (bootIfSVGExists()) mo.disconnect();
+    });
+    mo.observe(svgMount, { childList: true, subtree: true });
+  }
 };
 
+  // -------------------------
+  // Gallery (public images + pending uploads)
+  // -------------------------
+  const setupGallery = () => {
+    const track = document.getElementById("galleryTrack");
+    const wrapper = document.querySelector(".gallery-wrapper");
+    if (!track || !wrapper) return;
+
+    const guessGhBase = () => {
+      const parts = location.pathname.split("/").filter(Boolean);
+      if (!location.hostname.endsWith("github.io")) return "";
+      if (!parts.length) return "";
+      const first = parts[0];
+      const reserved = new Set(["uploads","gallery","assets","css","js","img","images"]);
+      if (reserved.has(first.toLowerCase())) return "";
+      return `/${first}`;
+    };
+
+    const GH_BASE = guessGhBase();
+    const LIST_URL = `${GH_BASE}/uploads/public/gallery.json`;
+    const PUBLIC_DIR = `${GH_BASE}/uploads/public/`;
+
+    const buildItem = (filename) => {
+      const wrap = document.createElement("div");
+      wrap.className = "gallery-item";
+      const img = document.createElement("img");
+      img.loading = "lazy";
+      img.alt = "صورة من المعرض";
+      img.src = PUBLIC_DIR + encodeURIComponent(filename);
+      wrap.appendChild(img);
+      return wrap;
+    };
+
+    const loadGallery = async () => {
+      track.innerHTML = "";
+
+      try {
+        const r = await fetch(LIST_URL, { cache: "no-store" });
+        if (!r.ok) throw new Error(String(r.status));
+        const data = await r.json();
+        const files = Array.isArray(data.files) ? data.files : [];
+
+        if (!files.length) {
+          const empty = document.createElement("div");
+          empty.className = "text-center w-full py-8 text-slate-500 font-bold";
+          empty.textContent = "لا توجد صور منشورة حالياً.";
+          track.appendChild(empty);
+          return;
+        }
+
+        const set1 = document.createElement("div");
+        set1.className = "gallery-set";
+        set1.dataset.set = "1";
+        files.forEach((f) => set1.appendChild(buildItem(f)));
+
+        const set2 = set1.cloneNode(true);
+        set2.dataset.set = "2";
+
+        track.appendChild(set1);
+        track.appendChild(set2);
+      } catch {
+        const err = document.createElement("div");
+        err.className = "text-center w-full py-8 text-rose-600 font-black";
+        err.textContent = "تعذر تحميل الصور. تحقق من uploads/public/gallery.json وأسماء الصور.";
+        track.appendChild(err);
+      }
+    };
+
+    loadGallery();
+  };
+
+  
+
+ const setupDesktopOverflowNav = () => {
+  const nav = document.getElementById("nav");
+  const moreWrap = document.getElementById("navMore");
+  const moreBtn = document.getElementById("navMoreBtn");
+  const moreMenu = document.getElementById("navMoreMenu");
+
+  if (!nav || !moreWrap || !moreBtn || !moreMenu) return;
+
+  const isDesktop = () => window.matchMedia("(min-width: 1025px)").matches;
+  const getNavLinks = () => Array.from(nav.querySelectorAll(":scope > a.nav-link"));
+
+  const closeMore = () => {
+    moreMenu.classList.remove("open");
+    moreBtn.setAttribute("aria-expanded", "false");
+    moreMenu.setAttribute("aria-hidden", "true");
+  };
+
+  const openMore = () => {
+    moreMenu.classList.add("open");
+    moreBtn.setAttribute("aria-expanded", "true");
+    moreMenu.setAttribute("aria-hidden", "false");
+  };
+
+  moreBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    moreMenu.classList.contains("open") ? closeMore() : openMore();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!moreWrap.contains(e.target)) closeMore();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMore();
+  });
+
+  const reset = () => {
+    // رجّع أي روابط موجودة داخل moreMenu إلى nav قبل moreWrap
+    const menuLinks = Array.from(moreMenu.querySelectorAll("a.nav-link"));
+    menuLinks.forEach((a) => nav.insertBefore(a, moreWrap));
+    moreMenu.innerHTML = "";
+  };
+
+  const rebuild = () => {
+    reset();
+
+    if (!isDesktop()) {
+      moreWrap.hidden = true;
+      closeMore();
+      return;
+    }
+
+    // Desktop
+    moreWrap.hidden = false;
+    closeMore();
+
+    const overflows = () => nav.scrollWidth > (nav.getBoundingClientRect().width - 16);
+
+    while (overflows()) {
+      const links = getNavLinks();
+      if (links.length <= 5) break;
+
+      const lastLink = links[links.length - 1];
+      if (!lastLink) break;
+
+      nav.removeChild(lastLink);
+      moreMenu.insertBefore(lastLink, moreMenu.firstChild);
+    }
+
+    moreWrap.hidden = !moreMenu.querySelector("a.nav-link");
+  };
+
+  const ro = new ResizeObserver(() => rebuild());
+  ro.observe(nav);
+
+  window.addEventListener("resize", rafThrottle(rebuild), { passive: true });
+
+  rebuild();
+  setTimeout(rebuild, 120);
+};
 
   // -------------------------
   // Boot
   // -------------------------
   document.addEventListener("DOMContentLoaded", () => {
     setupHeaderAndMenu();
+    setupDesktopOverflowNav();
     setupHeaderScroll();
     setupSmoothAnchors();
     setupActiveNav();
@@ -1054,6 +1199,5 @@ const setupGallery = () => {
     setupCharts();
     setupHeatmap();
     setupGallery();
-
   });
 })();

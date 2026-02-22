@@ -4,7 +4,7 @@
    Design Tokens
 ========================================= */
 :root{
-  --bg: #F8FAFC;
+  --bg: #fff0db ;
   --surface: #FFFFFF;
   --text: #0F172A;
   --muted: #64748B;
@@ -36,9 +36,9 @@
 
   --container-pad: 16px;
 
-  /* Anchor offset for sticky header (updated per breakpoints below) */
-  --anchor-offset: 190px;
 }
+
+
 
 /* =========================================
    Base Reset + Quality
@@ -124,8 +124,6 @@ section[id]{ scroll-margin-top: var(--anchor-offset); }
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
-
   background: rgba(255,255,255,0.88);
   backdrop-filter: blur(var(--header-blur));
   -webkit-backdrop-filter: blur(var(--header-blur));
@@ -196,15 +194,22 @@ section[id]{ scroll-margin-top: var(--anchor-offset); }
   border-radius: 14px;
   border: 1px solid var(--border);
   background: #fff;
-  display:none;
+
+  display: flex;               
   flex-direction: column;
   align-items:center;
   justify-content:center;
   gap: 5px;
+
   box-shadow: var(--shadow-xs);
   cursor:pointer;
   transition: transform .18s var(--ease), box-shadow .18s var(--ease), border-color .18s var(--ease);
 }
+
+@media (min-width: 1025px){
+  .menu-btn{ display: none; }  
+}
+
 .menu-btn:hover{
   transform: translateY(-1px);
   box-shadow: var(--shadow-sm);
@@ -243,25 +248,79 @@ section[id]{ scroll-margin-top: var(--anchor-offset); }
   border-color: rgba(100,116,139,0.45);
 }
 
-/* Nav */
-.nav {
+/* =========================
+   Nav: Desktop = one line
+   Mobile = Drawer
+========================= */
+
+/* Base */
+.nav{
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px; 
-  padding: 10px 0;
+  gap: 6px;
+  padding: 8px 0;
 }
-.nav-link {
-  padding: 8px 16px;
-  border-radius: 8px; /* زوايا ناعمة احترافية بدلاً من الكبسولة الدائرية */
-  border: none !important; /* إزالة الحدود */
-  background: transparent !important; /* إزالة الخلفية البيضاء */
-  font-size: 14px;
-  font-weight: 700;
-  color: #475569; /* لون النص رمادي هادئ */
-  text-decoration: none;
-  box-shadow: none !important; /* إزالة الظل الذي يسبب تشتت بصري */
-  transition: all 0.2s ease;
+
+/* Desktop / Laptop: one-line nav */
+@media (min-width: 1025px){
+  .nav{
+    align-items: center;
+    flex-wrap: nowrap;     /* IMPORTANT: no wrap */
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0;
+    justify-content: flex-end;
+  }
+
+  .nav-link{
+    padding: 8px 12px;     /* slightly tighter */
+  }
 }
+
+/* Mobile / Tablet: Drawer */
+@media (max-width: 1024px){
+  .nav{
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: min(86vw, 360px);
+
+    background: rgba(255,255,255,0.98);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border-left: 1px solid var(--border);
+    box-shadow: 0 30px 80px rgba(2,6,23,0.25);
+
+    transform: translateX(110%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .22s var(--ease), opacity .22s var(--ease);
+
+    padding: calc(env(safe-area-inset-top) + 90px) 16px 16px; /* ✅ safe header space */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    z-index: 2900;
+  }
+
+  .nav.open{
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .nav-link{
+    display: block;
+    padding: 12px 12px;
+    border-radius: 12px;
+  }
+}
+
 .nav-link:hover {
   color: #0F172A; 
   background: #F1F5F9 !important; 
@@ -1086,7 +1145,6 @@ canvas{ display:block; }
 
 /* Large tablets / small laptops */
 @media (max-width: 1024px){
-  :root{ --anchor-offset: 240px; }
   .menu-btn{ display:flex; }
 
   /* logos become horizontal scroll for cleaner header */
@@ -1115,7 +1173,6 @@ canvas{ display:block; }
 
 /* Phones */
 @media (max-width: 640px){
-  :root{ --anchor-offset: 260px; }
 
   .header-top{ padding: 12px 0 8px 0; }
   .brand-icon{ width: 40px; height: 40px; border-radius: 13px; }
@@ -1143,18 +1200,6 @@ canvas{ display:block; }
    Paste at END of styles.css
 ========================================= */
 
-/* Center logo strip + nav on desktop */
-@media (min-width: 1025px){
-  .header-top{
-    justify-content: center;         /* brand in the middle */
-  }
-  .logo-strip{
-    justify-content: center;         /* logos centered */
-  }
-  .nav{
-    justify-content: center;         /* nav pills centered */
-  }
-}
 
 /* Keep mobile behavior (menu button + collapsible nav) clean */
 @media (max-width: 1024px){
@@ -1178,61 +1223,39 @@ canvas{ display:block; }
   text-align: center;
 }
 
-/* =========================
-   Mobile Side Drawer Nav
-   ========================= */
-@media (max-width: 1024px){
-.nav{
-    position: fixed;
-    top: 0;
-    right: 0;                 /* القائمة تفتح من اليمين */
-    height: 100vh;
-    width: min(340px, 86vw);
-    padding: 90px 16px 16px;
-    background: rgba(255,255,255,0.98);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-left: 1px solid var(--border);
-    box-shadow: 0 30px 80px rgba(2,6,23,0.25);
 
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
 
-    transform: translateX(110%);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform .22s var(--ease), opacity .22s var(--ease);
-    z-index: 1500;
-    
-    overflow-y: auto; /* 👈 السطر المضاف ليسمح بالتمرير العمودي داخل القائمة */
-  }
+.site-header{ z-index: 3000; }
 
-  .nav.open{
-    transform: translateX(0);
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .nav-overlay{
-    position: fixed;
-    inset: 0;
-    background: rgba(2,6,23,0.45);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .2s var(--ease);
-    z-index: 1400;
-  }
-  .nav-overlay.open{
-    opacity: 1;
-    pointer-events: auto;
-  }
+.nav-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s var(--ease);
+  z-index: 2800;
+}
+.nav-overlay.open{
+  opacity: 1;
+  pointer-events: auto;
 }
 
-@media (max-width: 1024px){
-  .menu-btn{ position: relative; z-index: 3000; }
-  .nav{ z-index: 2900 !important; }
-  .nav-overlay{ z-index: 2800 !important; }
+/* Desktop More button (toggle) */
+@media (min-width: 1025px){
+  .nav-more-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .nav-more-btn::after{
+    content:"⇄";
+    font-weight:900;
+    opacity:.7;
+  }
+  .nav-more-btn.is-swapped::after{
+    content:"↩";
+  }
 }
 
 /* =========================================
@@ -1349,17 +1372,10 @@ canvas{ display:block; }
 /* --- Better layering: header/menu/nav/overlay --- */
 .site-header { z-index: 3000; }
 
-@media (max-width: 1024px){
-  .nav-overlay{ z-index: 2900 !important; } /* below header/menu */
-  .nav{ z-index: 3100 !important; }         /* drawer above overlay */
-  .menu-btn{ z-index: 3200 !important; }    /* always clickable */
-}
-
 /* --- Lock background scroll when mobile nav open --- */
 body.nav-open{
   overflow: hidden;
   overscroll-behavior: contain;
-  touch-action: none;
 }
 
 /* --- Hamburger -> X when open --- */
@@ -1373,11 +1389,7 @@ body.nav-open{
   transform: translateY(-7px) rotate(45deg);
 }
 
-/* --- Undo desktop centering that breaks header alignment (optional but recommended) --- */
-@media (min-width: 1025px){
-  .header-top{ justify-content: space-between; }
-  .nav{ justify-content: center; }
-}
+
 
 /* =========================================
    تعديلات الهيدر الاحترافي (سطر واحد)
@@ -1412,13 +1424,13 @@ body.nav-open{
   padding: 10px 0;
 }
 .sponsor-title{
-  color: rgba(226,232,240,0.95);
-  font-weight: 900;
-  font-size: 12px;
+  color: rgba(247, 246, 242, 0.95);
+  font-weight:bold ;
+  font-size: 16px;
   letter-spacing: .02em;
 }
 .sponsor-logo{
-  height: 54px;
+  height: 60px;
   width: auto;
   object-fit: contain;
   filter: drop-shadow(0 14px 24px rgba(0,0,0,.25));
@@ -1564,3 +1576,448 @@ body.nav-open{
 
 /* تثبيت اتجاه المعرض */
 .gallery-wrapper{ direction: ltr; }
+
+
+/* Fix: allow the "More" dropdown to escape the desktop nav container */
+@media (min-width: 1025px){
+  #nav{
+    overflow: visible !important; /* was hidden, it clips the dropdown */
+  }
+
+  #navMore{
+    position: relative;
+  }
+
+  #navMoreMenu{
+    z-index: 9999;
+  }
+}
+
+/* Desktop: proper dropdown (RTL-friendly) */
+@media (min-width: 1025px){
+
+  /* مهم: لا تقصّ القائمة */
+  #nav{ overflow: visible !important; }
+
+  /* خلي wrapper مرجع للـ absolute */
+  #navMore{ position: relative; }
+
+  /* زر المزيد نفس شكل روابط الناف */
+  #navMoreBtn{
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: transparent;
+    font-weight: 900;
+    color: #475569;
+    cursor: pointer;
+  }
+  #navMoreBtn:hover{ background:#F1F5F9; color:#0F172A; }
+
+  /* المنسدلة */
+  #navMoreMenu{
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;              /* RTL */
+    min-width: 220px;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 18px 50px rgba(2,6,23,0.14);
+    z-index: 9999;
+
+    display: none;
+  }
+  #navMoreMenu.open{ display: block; }
+
+  /* روابط داخل المنسدلة: بدون حركة translate */
+  #navMoreMenu a.nav-link{
+    display: block;
+    padding: 10px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 900;
+    color: #334155;
+    white-space: nowrap;
+    transform: none !important;
+  }
+  #navMoreMenu a.nav-link:hover{
+    background:#F1F5F9 !important;
+    color:#0F172A;
+    transform: none !important; /* يمنع “اهتزاز” القائمة */
+  }
+}
+
+/* =========================
+   Desktop "More" dropdown - FINAL FIX
+   Put this at the VERY END of your CSS file
+========================= */
+@media (min-width: 1025px){
+  /* مهم: لا تقصّ المنسدلة */
+  #nav{
+    overflow: visible !important;
+  }
+
+  /* wrapper مرجع للـ absolute */
+  #navMore{
+    position: relative !important;
+  }
+
+  /* زر المزيد */
+  #navMoreBtn{
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: transparent;
+    font-weight: 900;
+    color: #475569;
+    cursor: pointer;
+  }
+  #navMoreBtn:hover{
+    background:#F1F5F9;
+    color:#0F172A;
+  }
+
+  /* المنسدلة: تحت الزر مباشرة */
+  #navMoreMenu{
+    position: absolute !important;  /* IMPORTANT: not fixed */
+    top: calc(100% + 10px) !important;
+    right: 0 !important;            /* RTL */
+    left: auto !important;
+
+    min-width: 240px;
+    max-width: calc(100vw - 24px);
+    padding: 10px;
+
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: 0 22px 60px rgba(2,6,23,0.18);
+
+    display: none;
+    z-index: 4000;
+
+    transform-origin: top right;
+  }
+  #navMoreMenu.open{
+    display: block;
+  }
+
+  /* روابط داخل القائمة */
+  #navMoreMenu a.nav-link{
+    display:block;
+    padding: 12px 14px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 900;
+    color:#0F172A;
+    transform: none !important; /* يمنع الاهتزاز */
+  }
+  #navMoreMenu a.nav-link:hover{
+    background:#F1F5F9 !important;
+    transform: none !important;
+  }
+}
+
+/* =========================
+   FIX: Desktop "More" dropdown (no clipping + not bold)
+   Put at VERY END of styles.css
+========================= */
+@media (min-width: 1025px){
+
+  /* لا تقصّ المنسدلة */
+  #nav{ overflow: visible !important; }
+
+  /* مرجع للـ absolute */
+  #navMore{ position: relative !important; }
+
+  /* زر المزيد (مو bold) */
+  #navMoreBtn{
+    font-weight: 700 !important;
+  }
+
+  /* المنسدلة: افتحها باتجاه اليمين لتجنب القص من اليسار */
+  #navMoreMenu{
+    position: absolute !important;
+    top: calc(100% + 10px) !important;
+
+    left: 0 !important;     /* بدل right:0 */
+    right: auto !important;
+
+    min-width: 240px;
+    max-width: calc(100vw - 24px);
+
+    display: none;
+    z-index: 4000;
+
+    transform-origin: top left !important;
+  }
+  #navMoreMenu.open{ display: block; }
+
+  /* روابط المنسدلة (مو bold) */
+  #navMoreMenu a.nav-link{
+    font-weight: 700 !important;
+  }
+
+  /* (اختياري) إذا بدك كل روابط الهيدر مو bold كمان */
+  #nav > a.nav-link,
+  #navMoreBtn{
+    font-weight: 700 !important;
+  }
+
+  /* (اختياري) حتى الـactive ما يكون bold */
+  #nav > a.nav-link.active{
+    font-weight: 700 !important;
+  }
+}
+
+#navMoreBtn::before,
+#navMoreBtn::after{
+  content: none !important;
+  display: none !important;
+}
+
+/* More button active state when dropdown is open */
+#navMoreBtn[aria-expanded="true"]{
+  background: #F1F5F9;
+  color: #0F172A;
+  border-color: rgba(203,213,225,0.95);
+}
+
+#navMoreBtn[aria-expanded="true"]:hover{
+  background: #E2E8F0;
+}
+
+/* =========================
+   Logos alignment fix
+========================= */
+.header-logos {
+  display: flex;
+  align-items: center; /* مهم جداً لإبقاء الشعارين على نفس خط المنتصف الأفقي */
+  gap: 15px; /* زيادة المسافة قليلاً تريح العين وتمنع تداخل العناصر */
+}
+
+
+
+.logo-ministry {
+  /* زيادة الارتفاع بشكل ملحوظ لتعويض الفراغات والوزن البصري */
+  height: 35px; /* يمكنك تعديل هذا الرقم صعوداً أو نزولاً حتى يرضيك الحجم بصرياً */
+  width: auto;
+  opacity: .95;
+}
+
+.logo-main {
+  /* تقليل ارتفاع شعار المعرض قليلاً ليسمح لشعار الوزارة بالتوازن معه */
+  height: 20px; 
+  width: auto;
+}
+
+/* الخط الفاصل */
+.logo-divider {
+  height: 10px; 
+  width: 1px; 
+  background-color: #ccc; 
+}
+
+
+
+
+
+/* =========================================
+   تحديثات قسم الأداء الرقمي (Digital UX/UI)
+========================================= */
+
+/* باجات الإحصائيات العلوية - تصميم حديث وواضح للموبايل والديسكتوب */
+.badge-modern {
+  display: flex;
+  flex-direction: column;
+  background: #F8FAFC;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.badge-modern:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xs);
+  border-color: var(--border-strong);
+  background: #FFFFFF;
+}
+.badge-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.badge-val {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+
+/* تنسيق سطور القوائم داخل بطاقات المنصات */
+.platform-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  padding: 8px 0;
+  border-bottom: 1px dashed rgba(226, 232, 240, 0.6);
+}
+.platform-list li:last-child {
+  border-bottom: none;
+}
+.platform-list li span { color: #64748B; font-weight: 500; }
+.platform-list li strong { color: #0F172A; font-weight: 900; }
+
+/* تمييز السطر الأخير (المتابعون) ليكون كخلاصة للبطاقة */
+.platform-list li.highlight {
+  margin-top: 6px;
+  padding: 10px 12px;
+  background: #F1F5F9;
+  border-radius: 8px;
+  border-bottom: none;
+}
+.platform-list li.highlight span { color: #334155; font-weight: 700; }
+.platform-list li.highlight strong { color: var(--brand); font-size: 15px; }
+
+/* ألوان العلامات التجارية للمنصات (لإعطاء هوية بصرية) */
+.platform-card {
+  position: relative;
+  overflow: hidden;
+}
+/* خط علوي ملون لكل منصة */
+.platform-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--muted);
+}
+.brand-facebook::before { background: #1877F2; }
+.brand-facebook .platform-title { color: #1877F2; }
+
+.brand-instagram::before { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+.brand-instagram .platform-title {
+  background: -webkit-linear-gradient(45deg, #f09433, #dc2743, #bc1888);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-youtube::before { background: #FF0000; }
+.brand-youtube .platform-title { color: #FF0000; }
+
+.brand-x::before { background: #000000; }
+.brand-x .platform-title { color: #000000; }
+
+.brand-telegram::before { background: #0088cc; }
+.brand-telegram .platform-title { color: #0088cc; }
+
+/* تعديلات للنصوص في بطاقة القراءة السريعة */
+.insight-text {
+  line-height: 1.8;
+}
+
+
+.svg-mount svg g path,
+.svg-mount svg g polygon,
+.svg-mount svg g rect {
+  fill: inherit !important;
+  transition: fill 0.2s ease-in-out; /* حركة ناعمة جداً ولا ترهق المعالج */
+}
+
+
+
+/* =========================================
+   Footer Alignment & Refinements
+========================================= */
+.site-footer {
+  text-align: center;
+}
+
+.site-footer .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.site-footer h4,
+.site-footer p {
+  text-align: center;
+}
+
+/* =========================================
+   Responsive Rules (Mobile Optimizations)
+========================================= */
+@media (max-width: 640px) {
+  /* تحسينات إضافية لضمان عدم التصاق العناصر بحواف شاشة الموبايل */
+  .footer-info {
+    padding: 0 10px;
+  }
+  
+  /* زيادة التباعد بين الأسطر (Line-height) في الموبايل لتسهيل القراءة */
+  .footer-info p {
+    line-height: 1.8;
+  }
+}
+
+/* =========================================
+   Footer Logos - Mobile First (أحجام الجوال)
+========================================= */
+.footer-logo-ministry {
+  height: 100px; /* حجم نسر الوزارة على الجوال */
+  width: auto;
+  object-fit: contain;
+}
+
+.footer-logo-main {
+  height: 70px; /* حجم شعار المعرض على الجوال */
+  width: auto;
+  object-fit: contain;
+}
+
+/* =========================================
+   Footer Logos - Desktop (أحجام الكمبيوتر والتابلت)
+========================================= */
+@media (min-width: 768px) {
+  .footer-logo-ministry {
+    height: 150px; /* يكبر حجم النسر على الديسكتوب */
+  }
+
+  .footer-logo-main {
+    height: 120px; /* يكبر شعار المعرض على الديسكتوب */
+  }
+}
+
+@media (min-width: 768px) { 
+.logo-ministry {
+  height: 60px; 
+  width: auto;
+  opacity: .95;
+}
+
+.logo-main {
+  height: 40px; 
+  width: auto;
+}
+
+/* الخط الفاصل */
+.logo-divider {
+  height: 35px; 
+  width: 1px; 
+  background-color: #ccc; 
+}
+  
+}
+
+
+
