@@ -645,193 +645,251 @@
   // -------------------------
   // Heatmap / SVG (Hover = auto details)
   // -------------------------
-  const setupHeatmap = () => {
-    const mapContainer = document.querySelector("#map-container");
-    const svgMount = document.querySelector("#svgMount");
-    const tooltip = document.querySelector("#tooltip");
-    const slider = document.querySelector("#timeSlider");
-    const playBtn = document.querySelector("#playBtn");
-    const dateDisplay = document.querySelector("#dateDisplay");
-    const counterSpan = document.querySelector("#counterSpan");
+  // -------------------------
+// Heatmap / SVG (iOS-safe)
+// -------------------------
+const setupHeatmap = () => {
+  // ✅ منع تكرار التهيئة (سبب تسريب/كراش)
+  if (window.__heatmap_inited) return;
+  window.__heatmap_inited = true;
 
-    if (!mapContainer || !svgMount || !tooltip || !slider || !playBtn || !dateDisplay || !counterSpan) return;
+  const mapContainer = document.querySelector("#map-container");
+  const svgMount = document.querySelector("#svgMount");
+  const tooltip = document.querySelector("#tooltip");
+  const slider = document.querySelector("#timeSlider");
+  const playBtn = document.querySelector("#playBtn");
+  const dateDisplay = document.querySelector("#dateDisplay");
+  const counterSpan = document.querySelector("#counterSpan");
 
-    const hallPanel = document.querySelector("#hallPanel");
-    const overlay = document.querySelector("#overlay");
-    const hallPanelClose = document.querySelector("#hallPanelClose");
-    const hallPanelTitle = document.querySelector("#hallPanelTitle");
-    const hallPanelSub = document.querySelector("#hallPanelSub");
-    const hallMetricDensity = document.querySelector("#hallMetricDensity");
-    const hallMetricVisitors = document.querySelector("#hallMetricVisitors");
-    const hallMetricEvents = document.querySelector("#hallMetricEvents");
+  if (!mapContainer || !svgMount || !tooltip || !slider || !playBtn || !dateDisplay || !counterSpan) return;
 
-    // دعم تقليل الحركة في المتصفح
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-    const formatNumber = (num) => new Intl.NumberFormat('en-US').format(num);
+  const hallPanel = document.querySelector("#hallPanel");
+  const overlay = document.querySelector("#overlay");
+  const hallPanelClose = document.querySelector("#hallPanelClose");
+  const hallPanelTitle = document.querySelector("#hallPanelTitle");
+  const hallPanelSub = document.querySelector("#hallPanelSub");
+  const hallMetricDensity = document.querySelector("#hallMetricDensity");
+  const hallMetricVisitors = document.querySelector("#hallMetricVisitors");
+  const hallMetricEvents = document.querySelector("#hallMetricEvents");
 
-    const setOverlay = (open) => {
-      if (!overlay) return;
-      overlay.classList.toggle("open", open);
-      overlay.setAttribute("aria-hidden", open ? "false" : "true");
-    };
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const setPanel = (open) => {
-      if (!hallPanel) return;
-      hallPanel.classList.toggle("open", open);
-      hallPanel.setAttribute("aria-hidden", open ? "false" : "true");
-      setOverlay(open);
-    };
+  const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+  const formatNumber = (num) => new Intl.NumberFormat("en-US").format(num);
 
-    overlay?.addEventListener("click", () => setPanel(false));
-    hallPanelClose?.addEventListener("click", () => setPanel(false));
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") setPanel(false);
+  const setOverlay = (open) => {
+    if (!overlay) return;
+    overlay.classList.toggle("open", open);
+    overlay.setAttribute("aria-hidden", open ? "false" : "true");
+  };
+
+  const setPanel = (open) => {
+    if (!hallPanel) return;
+    hallPanel.classList.toggle("open", open);
+    hallPanel.setAttribute("aria-hidden", open ? "false" : "true");
+    setOverlay(open);
+  };
+
+  overlay?.addEventListener("click", () => setPanel(false));
+  hallPanelClose?.addEventListener("click", () => setPanel(false));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setPanel(false);
+  });
+
+  // -------------------------
+  // Data
+  // -------------------------
+  const hallNames = {
+    H1: "القاعة الأولى",
+    H2: "قاعة الطفل (الثالثة)",
+    H10: "قاعة الشباب (الرابعة)",
+    H11: "القاعة السادسة",
+    H25: "قاعة الفكر (الثانية)",
+    H26: "قاعة المعرفة (الخامسة)",
+    H27: "صالة المطاعم",
+    H28: "قاعة الفعاليات الثالثة",
+    "H1.1": "منتدى دمشق الثقافي",
+    "H10.1": "الصالون الثقافي",
+    H41: "قاعة الجامعات الخاصة",
+    "12": "القاعة 12",
+    VIP: "القاعة الرئاسية (VIP)",
+    PR: "المركز الإعلامي",
+  };
+
+  const dailyData = [
+    {
+      day: "6 شباط (الافتتاح)", target: 158450, events: { "H1.1": 5, "H10.1": 4, H28: 4 },
+      densities: { H1: 90, H2: 95, H10: 95, H11: 85, H25: 88, H26: 80, H27: 85, H28: 75, "H1.1": 60, "H10.1": 45, H41: 45, "12": 40, VIP: 10, PR: 45 }
+    },
+    {
+      day: "7 شباط", target: 47563, events: { "H1.1": 9, "H10.1": 8, H28: 6 },
+      densities: { H1: 70, H2: 88, H10: 85, H11: 60, H25: 65, H26: 55, H27: 65, H28: 80, "H1.1": 85, "H10.1": 85, H41: 45, "12": 40, VIP: 8, PR: 45 }
+    },
+    {
+      day: "8 شباط", target: 65725, events: { "H1.1": 9, "H10.1": 3, H28: 4 },
+      densities: { H1: 80, H2: 95, H10: 92, H11: 70, H25: 75, H26: 65, H27: 75, H28: 60, "H1.1": 85, "H10.1": 45, H41: 55, "12": 50, VIP: 12, PR: 50 }
+    },
+    {
+      day: "9 شباط", target: 82300, events: { "H1.1": 4, "H10.1": 2, H28: 3 },
+      densities: { H1: 82, H2: 96, H10: 95, H11: 72, H25: 78, H26: 68, H27: 78, H28: 50, "H1.1": 55, "H10.1": 35, H41: 60, "12": 55, VIP: 10, PR: 55 }
+    },
+    {
+      day: "10 شباط", target: 94150, events: { "H1.1": 4, "H10.1": 3, H28: 5 },
+      densities: { H1: 85, H2: 98, H10: 96, H11: 75, H25: 82, H26: 72, H27: 82, H28: 65, "H1.1": 55, "H10.1": 45, H41: 35, "12": 30, VIP: 5, PR: 35 }
+    },
+    {
+      day: "11 شباط", target: 112600, events: { "H1.1": 4, "H10.1": 2, H28: 5 },
+      densities: { H1: 88, H2: 100, H10: 98, H11: 80, H25: 85, H26: 78, H27: 85, H28: 65, "H1.1": 55, "H10.1": 35, H41: 40, "12": 35, VIP: 6, PR: 40 }
+    },
+    {
+      day: "12 شباط", target: 158400, events: { "H1.1": 5, "H10.1": 3, H28: 5 },
+      densities: { H1: 90, H2: 100, H10: 100, H11: 85, H25: 90, H26: 85, H27: 90, H28: 80, "H1.1": 65, "H10.1": 45, H41: 45, "12": 40, VIP: 8, PR: 45 }
+    },
+    {
+      day: "13 شباط (ذروة الزحام)", target: 245500, events: { "H1.1": 8, "H10.1": 6, H28: 7 },
+      densities: { H1: 98, H2: 100, H10: 100, H11: 95, H25: 98, H26: 96, H27: 98, H28: 95, "H1.1": 92, "H10.1": 88, H41: 85, "12": 87, VIP: 15, PR: 90 }
+    },
+    {
+      day: "14 شباط", target: 155000, events: { "H1.1": 5, "H10.1": 4, H28: 4 },
+      densities: { H1: 88, H2: 92, H10: 90, H11: 80, H25: 85, H26: 75, H27: 85, H28: 70, "H1.1": 65, "H10.1": 40, H41: 50, "12": 45, VIP: 10, PR: 40 }
+    },
+    {
+      day: "15 شباط", target: 125012, events: { "H1.1": 3, "H10.1": 3, H28: 4 },
+      densities: { H1: 82, H2: 88, H10: 85, H11: 75, H25: 80, H26: 70, H27: 78, H28: 65, "H1.1": 50, "H10.1": 35, H41: 40, "12": 40, VIP: 8, PR: 35 }
+    },
+    {
+      day: "16 شباط (الختام)", target: 45300, events: { "H1.1": 1, "H10.1": 1, H28: 1 },
+      densities: { H1: 45, H2: 65, H10: 60, H11: 35, H25: 40, H26: 30, H27: 55, H28: 30, "H1.1": 25, "H10.1": 25, H41: 15, "12": 15, VIP: 3, PR: 25 }
+    },
+  ];
+
+  // -------------------------
+  // Helpers
+  // -------------------------
+  const getHeatColor = (value) => {
+    const v = Number(value) || 0;
+    if (v >= 85) return "rgba(215, 48, 39, 0.85)";
+    if (v >= 70) return "rgba(252, 141, 89, 0.85)";
+    if (v >= 50) return "rgba(254, 224, 139, 0.85)";
+    if (v >= 30) return "rgba(166, 217, 106, 0.85)";
+    return "rgba(26, 152, 80, 0.85)";
+  };
+
+  const seeded01 = (seedStr) => {
+    let h = 2166136261;
+    for (let i = 0; i < seedStr.length; i++) {
+      h ^= seedStr.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    h ^= h << 13; h ^= h >> 17; h ^= h << 5;
+    return ((h >>> 0) % 10000) / 10000;
+  };
+
+  const computeVisitorsForDay = (dayIndex) => {
+    const today = dailyData[dayIndex];
+    const totalTarget = today.target;
+
+    const fixedRooms = ["VIP", "PR", "H41", "H1.1", "H10.1", "H28"];
+
+    const vipDensity = today.densities.VIP ?? 5;
+    const prDensity = today.densities.PR ?? 40;
+    const h41Density = today.densities.H41 ?? 40;
+
+    const vipVisitors = Math.floor(20 + (vipDensity / 100) * 170);
+    const prVisitors = Math.floor(200 + (prDensity / 100) * 200);
+    const h41Visitors = Math.floor(300 + (h41Density / 100) * 400);
+
+    const out = { VIP: vipVisitors, PR: prVisitors, H41: h41Visitors };
+
+    const eventHalls = ["H1.1", "H10.1", "H28"];
+    let eventsVisitorsTotal = 0;
+
+    eventHalls.forEach((hall) => {
+      const numEvents = today.events[hall] ?? 0;
+      if (numEvents > 0) {
+        const seed = seeded01(`${dayIndex}:${hall}`);
+        let occupancy = 0.60 + seed * 0.35;
+        if ((today.densities[hall] ?? 0) >= 80) occupancy = 0.90 + seed * 0.08;
+        const hallVisitors = Math.floor(numEvents * 250 * occupancy);
+        out[hall] = hallVisitors;
+        eventsVisitorsTotal += hallVisitors;
+      } else {
+        out[hall] = Math.floor(10 + seeded01(`${dayIndex}:${hall}:idle`) * 50);
+      }
     });
 
-    const hallNames = {
-      H1: "القاعة الأولى",
-      H2: "قاعة الطفل (الثالثة)",
-      H10: "قاعة الشباب (الرابعة)",
-      H11: "القاعة السادسة",
-      H25: "قاعة الفكر (الثانية)",
-      H26: "قاعة المعرفة (الخامسة)",
-      H27: "صالة المطاعم",
-      H28: "قاعة الفعاليات الثالثة",
-      "H1.1": "منتدى دمشق الثقافي",
-      "H10.1": "الصالون الثقافي",
-      H41: "قاعة الجامعات الخاصة",
-      "12": "القاعة 12",
-      VIP: "القاعة الرئاسية (VIP)",
-      PR: "المركز الإعلامي",
-    };
+    const remaining = totalTarget - (vipVisitors + prVisitors + h41Visitors + eventsVisitorsTotal);
 
-    // البيانات المحدثة بإجمالي 1,290,000 زائر بالضبط
-    const dailyData = [
-      {
-        day: "6 شباط (الافتتاح)", target: 158450, events: { "H1.1": 5, "H10.1": 4, H28: 4 },
-        densities: { H1: 90, H2: 95, H10: 95, H11: 85, H25: 88, H26: 80, H27: 85, H28: 75, "H1.1": 60, "H10.1": 45, H41: 45, "12": 40, VIP: 10, PR: 45 }
-      },
-      {
-        day: "7 شباط", target: 47563, events: { "H1.1": 9, "H10.1": 8, H28: 6 },
-        densities: { H1: 70, H2: 88, H10: 85, H11: 60, H25: 65, H26: 55, H27: 65, H28: 80, "H1.1": 85, "H10.1": 85, H41: 45, "12": 40, VIP: 8, PR: 45 }
-      },
-      {
-        day: "8 شباط", target: 65725, events: { "H1.1": 9, "H10.1": 3, H28: 4 },
-        densities: { H1: 80, H2: 95, H10: 92, H11: 70, H25: 75, H26: 65, H27: 75, H28: 60, "H1.1": 85, "H10.1": 45, H41: 55, "12": 50, VIP: 12, PR: 50 }
-      },
-      {
-        day: "9 شباط", target: 82300, events: { "H1.1": 4, "H10.1": 2, H28: 3 },
-        densities: { H1: 82, H2: 96, H10: 95, H11: 72, H25: 78, H26: 68, H27: 78, H28: 50, "H1.1": 55, "H10.1": 35, H41: 60, "12": 55, VIP: 10, PR: 55 }
-      },
-      {
-        day: "10 شباط", target: 94150, events: { "H1.1": 4, "H10.1": 3, H28: 5 },
-        densities: { H1: 85, H2: 98, H10: 96, H11: 75, H25: 82, H26: 72, H27: 82, H28: 65, "H1.1": 55, "H10.1": 45, H41: 35, "12": 30, VIP: 5, PR: 35 }
-      },
-      {
-        day: "11 شباط", target: 112600, events: { "H1.1": 4, "H10.1": 2, H28: 5 },
-        densities: { H1: 88, H2: 100, H10: 98, H11: 80, H25: 85, H26: 78, H27: 85, H28: 65, "H1.1": 55, "H10.1": 35, H41: 40, "12": 35, VIP: 6, PR: 40 }
-      },
-      {
-        day: "12 شباط", target: 158400, events: { "H1.1": 5, "H10.1": 3, H28: 5 },
-        densities: { H1: 90, H2: 100, H10: 100, H11: 85, H25: 90, H26: 85, H27: 90, H28: 80, "H1.1": 65, "H10.1": 45, H41: 45, "12": 40, VIP: 8, PR: 45 }
-      },
-      {
-        day: "13 شباط (ذروة الزحام)", target: 245500, events: { "H1.1": 8, "H10.1": 6, H28: 7 },
-        densities: { H1: 98, H2: 100, H10: 100, H11: 95, H25: 98, H26: 96, H27: 98, H28: 95, "H1.1": 92, "H10.1": 88, H41: 85, "12": 87, VIP: 15, PR: 90 }
-      },
-      {
-        day: "14 شباط", target: 155000, events: { "H1.1": 5, "H10.1": 4, H28: 4 },
-        densities: { H1: 88, H2: 92, H10: 90, H11: 80, H25: 85, H26: 75, H27: 85, H28: 70, "H1.1": 65, "H10.1": 40, H41: 50, "12": 45, VIP: 10, PR: 40 }
-      },
-      {
-        day: "15 شباط", target: 125012, events: { "H1.1": 3, "H10.1": 3, H28: 4 },
-        densities: { H1: 82, H2: 88, H10: 85, H11: 75, H25: 80, H26: 70, H27: 78, H28: 65, "H1.1": 50, "H10.1": 35, H41: 40, "12": 40, VIP: 8, PR: 35 }
-      },
-      {
-        day: "16 شباط (الختام)", target: 45300, events: { "H1.1": 1, "H10.1": 1, H28: 1 },
-        densities: { H1: 45, H2: 65, H10: 60, H11: 35, H25: 40, H26: 30, H27: 55, H28: 30, "H1.1": 25, "H10.1": 25, H41: 15, "12": 15, VIP: 3, PR: 25 }
-      },
-    ];
+    let sumDensities = 0;
+    const roomKeys = Object.keys(today.densities).filter((id) => !fixedRooms.includes(id));
+    roomKeys.forEach((id) => (sumDensities += (today.densities[id] ?? 0)));
+    sumDensities = sumDensities || 1;
 
-    const getHeatColor = (value) => {
-      const v = Number(value) || 0;
-      if (v >= 85) return "rgba(215, 48, 39, 0.85)";
-      if (v >= 70) return "rgba(252, 141, 89, 0.85)";
-      if (v >= 50) return "rgba(254, 224, 139, 0.85)";
-      if (v >= 30) return "rgba(166, 217, 106, 0.85)";
-      return "rgba(26, 152, 80, 0.85)";
-    };
+    let cur = 0;
+    roomKeys.forEach((id, idx) => {
+      const density = today.densities[id] ?? 0;
+      let alloc = Math.floor(remaining * (density / sumDensities));
+      if (idx === roomKeys.length - 1) alloc = remaining - cur;
+      out[id] = alloc;
+      cur += alloc;
+    });
 
-    const seeded01 = (seedStr) => {
-      let h = 2166136261;
-      for (let i = 0; i < seedStr.length; i++) {
-        h ^= seedStr.charCodeAt(i);
-        h = Math.imul(h, 16777619);
-      }
-      h ^= h << 13; h ^= h >> 17; h ^= h << 5;
-      return ((h >>> 0) % 10000) / 10000;
-    };
+    return out;
+  };
 
-    const computeVisitorsForDay = (dayIndex) => {
-      const today = dailyData[dayIndex];
-      const totalTarget = today.target;
+  // ✅ تسريع applyFillDeep: كاش للأشكال الداخلية بدل querySelectorAll كل مرة
+  const innerCache = new WeakMap();
+  const applyFillDeep = (rootEl, color) => {
+    if (!rootEl) return;
 
-      const fixedRooms = ["VIP", "PR", "H41", "H1.1", "H10.1", "H28"];
+    rootEl.style.setProperty("fill", color, "important");
 
-      const vipDensity = today.densities.VIP ?? 5;
-      const prDensity = today.densities.PR ?? 40;
-      const h41Density = today.densities.H41 ?? 40;
+    let inner = innerCache.get(rootEl);
+    if (!inner) {
+      inner = Array.from(rootEl.querySelectorAll?.("rect, polygon, path, circle, ellipse") || []);
+      innerCache.set(rootEl, inner);
+    }
+    for (const n of inner) {
+      n.style.setProperty("fill", color, "important");
+    }
+  };
 
-      const vipVisitors = Math.floor(20 + (vipDensity / 100) * 170);
-      const prVisitors = Math.floor(200 + (prDensity / 100) * 200);
-      const h41Visitors = Math.floor(300 + (h41Density / 100) * 400);
+  // -------------------------
+  // Tooltip (iOS safe): transform + rAF + قياس مرة واحدة
+  // -------------------------
+  let mapRect = null;
+  let ttW = 220, ttH = 110;
+  let ttMeasured = false;
 
-      const out = { VIP: vipVisitors, PR: prVisitors, H41: h41Visitors };
+  const refreshMapRect = () => {
+    mapRect = mapContainer.getBoundingClientRect();
+  };
 
-      const eventHalls = ["H1.1", "H10.1", "H28"];
-      let eventsVisitorsTotal = 0;
+  window.addEventListener("resize", refreshMapRect, { passive: true });
+  window.addEventListener("scroll", refreshMapRect, { passive: true });
 
-      eventHalls.forEach((hall) => {
-        const numEvents = today.events[hall] ?? 0;
-        if (numEvents > 0) {
-          const seed = seeded01(`${dayIndex}:${hall}`);
-          let occupancy = 0.60 + seed * 0.35;
-          if ((today.densities[hall] ?? 0) >= 80) occupancy = 0.90 + seed * 0.08;
-          const hallVisitors = Math.floor(numEvents * 250 * occupancy);
-          out[hall] = hallVisitors;
-          eventsVisitorsTotal += hallVisitors;
-        } else {
-          out[hall] = Math.floor(10 + seeded01(`${dayIndex}:${hall}:idle`) * 50);
-        }
-      });
+  const measureTooltipOnce = () => {
+    if (ttMeasured) return;
+    const r = tooltip.getBoundingClientRect();
+    ttW = r.width || 220;
+    ttH = r.height || 110;
+    ttMeasured = true;
+  };
 
-      const remaining = totalTarget - (vipVisitors + prVisitors + h41Visitors + eventsVisitorsTotal);
+  let moveRaf = 0;
+  let lastClient = null;
 
-      let sumDensities = 0;
-      const roomKeys = Object.keys(today.densities).filter((id) => !fixedRooms.includes(id));
-      roomKeys.forEach((id) => (sumDensities += (today.densities[id] ?? 0)));
-      sumDensities = sumDensities || 1;
+  const positionTooltip = (clientX, clientY) => {
+    if (!mapRect) refreshMapRect();
+    lastClient = { x: clientX, y: clientY };
+    if (moveRaf) return;
 
-      let cur = 0;
-      roomKeys.forEach((id, idx) => {
-        const density = today.densities[id] ?? 0;
-        let alloc = Math.floor(remaining * (density / sumDensities));
-        if (idx === roomKeys.length - 1) alloc = remaining - cur;
-        out[id] = alloc;
-        cur += alloc;
-      });
+    moveRaf = requestAnimationFrame(() => {
+      moveRaf = 0;
+      if (!lastClient || !mapRect) return;
 
-      return out;
-    };
-
-    const positionTooltip = (e) => {
-      const rect = mapContainer.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      const ttW = tooltip.offsetWidth || 220;
-      const ttH = tooltip.offsetHeight || 110;
+      const x = lastClient.x - mapRect.left;
+      const y = lastClient.y - mapRect.top;
 
       const pad = 12;
       const offset = 18;
@@ -839,220 +897,230 @@
       let left = x + offset;
       let top = y + offset;
 
-      if (left + ttW + pad > rect.width) left = x - ttW - offset;
-      if (top + ttH + pad > rect.height) top = y - ttH - offset;
+      if (left + ttW + pad > mapRect.width) left = x - ttW - offset;
+      if (top + ttH + pad > mapRect.height) top = y - ttH - offset;
 
-      left = clamp(left, pad, rect.width - ttW - pad);
-      top = clamp(top, pad, rect.height - ttH - pad);
+      left = clamp(left, pad, mapRect.width - ttW - pad);
+      top = clamp(top, pad, mapRect.height - ttH - pad);
 
-      tooltip.style.left = `${left}px`;
-      tooltip.style.top = `${top}px`;
+      tooltip.style.transform = `translate3d(${left}px, ${top}px, 0)`;
+    });
+  };
+
+  // -------------------------
+  // Counter: منع تراكب الأنيميشن
+  // -------------------------
+  let counterToken = 0;
+  const animateCounter = (el, endValue) => {
+    const myToken = ++counterToken;
+
+    const end = Number(endValue) || 0;
+    const dur = prefersReducedMotion ? 0 : 520;
+    const t0 = performance.now();
+
+    const step = (t) => {
+      if (myToken !== counterToken) return;
+      const p = dur === 0 ? 1 : clamp((t - t0) / dur, 0, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const v = Math.round(end * eased);
+      el.textContent = formatNumber(v);
+      if (p < 1) requestAnimationFrame(step);
     };
 
-    const animateCounter = (el, endValue) => {
-      const end = Number(endValue) || 0;
-      const dur = prefersReducedMotion ? 0 : 520;
-      const t0 = performance.now();
+    requestAnimationFrame(step);
+  };
 
-      const step = (t) => {
-        const p = dur === 0 ? 1 : clamp((t - t0) / dur, 0, 1);
-        const eased = 1 - Math.pow(1 - p, 3);
-        const v = Math.round(end * eased);
-        el.textContent = formatNumber(v);
-        if (p < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
+  // -------------------------
+  // Panel open
+  // -------------------------
+  let calculatedVisitors = {};
+
+  const openPanelWithData = (roomId, dayIdx, density) => {
+    const activeDay = dailyData[dayIdx];
+    const vis = calculatedVisitors?.[roomId] ?? 0;
+    const ev = activeDay?.events?.[roomId] ?? 0;
+    const d = Number(density ?? activeDay?.densities?.[roomId] ?? 0);
+
+    if (hallPanelTitle) hallPanelTitle.textContent = hallNames[roomId] || roomId;
+    if (hallPanelSub) hallPanelSub.textContent = activeDay?.day ?? "";
+    if (hallMetricDensity) hallMetricDensity.textContent = `${formatNumber(d)}%`;
+    if (hallMetricVisitors) hallMetricVisitors.textContent = formatNumber(vis);
+    if (hallMetricEvents) hallMetricEvents.textContent = formatNumber(ev);
+
+    setPanel(true);
+  };
+
+  // -------------------------
+  // Bind halls
+  // -------------------------
+  const bindHall = (roomId, el) => {
+    if (!el || el.dataset.bound) return;
+    el.dataset.bound = "1";
+
+    const setHoverStroke = (on) => {
+      if (!on) {
+        el.style.removeProperty("stroke");
+        el.style.removeProperty("stroke-width");
+        return;
+      }
+      el.style.setProperty("stroke", "rgba(15,23,42,.90)", "important");
+      el.style.setProperty("stroke-width", "4px", "important");
     };
 
-    const applyFillDeep = (rootEl, color) => {
-      if (!rootEl) return;
-      rootEl.style.setProperty("fill", color, "important");
-      const inner = rootEl.querySelectorAll?.("rect, polygon, path, circle, ellipse");
-      inner?.forEach((n) => n.style.setProperty("fill", color, "important"));
-    };
+    // Desktop hover: tooltip فقط (بدون فتح panel على hover)
+    el.addEventListener("mouseenter", (e) => {
+      setHoverStroke(true);
 
-    let calculatedVisitors = {};
-    let hoverCloseTimer = null;
-
-    const openPanelWithData = (roomId, dayIdx, density) => {
+      const dayIdx = Number(slider.value) || 0;
       const activeDay = dailyData[dayIdx];
+      const d = activeDay?.densities?.[roomId] ?? 0;
       const vis = calculatedVisitors?.[roomId] ?? 0;
-      const ev = activeDay?.events?.[roomId] ?? 0;
-      const d = Number(density ?? activeDay?.densities?.[roomId] ?? 0);
 
-      if (hallPanelTitle) hallPanelTitle.textContent = hallNames[roomId] || roomId;
-      if (hallPanelSub) hallPanelSub.textContent = activeDay?.day ?? "";
-      if (hallMetricDensity) hallMetricDensity.textContent = `${formatNumber(d)}%`;
-      if (hallMetricVisitors) hallMetricVisitors.textContent = formatNumber(vis);
-      if (hallMetricEvents) hallMetricEvents.textContent = formatNumber(ev);
+      const ttName = document.querySelector("#tt-name");
+      const densityVal = document.querySelector("#densityVal");
+      const visitorsVal = document.querySelector("#visitorsVal");
 
-      setPanel(true);
+      if (ttName) ttName.textContent = hallNames[roomId] || roomId;
+      if (densityVal) densityVal.textContent = `${formatNumber(d)}%`;
+      if (visitorsVal) visitorsVal.textContent = formatNumber(vis);
+
+      tooltip.setAttribute("aria-hidden", "false");
+      refreshMapRect();
+
+      // قياس مرة واحدة بعد ما يظهر
+      requestAnimationFrame(() => {
+        measureTooltipOnce();
+        if (e) positionTooltip(e.clientX, e.clientY);
+      });
+    });
+
+    el.addEventListener("mousemove", (e) => {
+      positionTooltip(e.clientX, e.clientY);
+    });
+
+    el.addEventListener("mouseleave", () => {
+      tooltip.setAttribute("aria-hidden", "true");
+      setHoverStroke(false);
+    });
+
+    // ✅ فتح الـpanel فقط على النقر/اللمس (أفضل كثيرًا على iOS)
+    el.addEventListener("pointerdown", () => {
+      const dayIdx = Number(slider.value) || 0;
+      const activeDay = dailyData[dayIdx];
+      const density = activeDay?.densities?.[roomId] ?? 0;
+      openPanelWithData(roomId, dayIdx, density);
+    });
+  };
+
+  // -------------------------
+  // Update map
+  // -------------------------
+  const updateMap = (dayIndex) => {
+    const idx = clamp(Number(dayIndex) || 0, 0, dailyData.length - 1);
+    const today = dailyData[idx];
+
+    dateDisplay.textContent = today.day;
+    calculatedVisitors = computeVisitorsForDay(idx);
+
+    Object.entries(today.densities).forEach(([roomId, density]) => {
+      const el = document.getElementById(roomId);
+      if (!el) return;
+
+      applyFillDeep(el, getHeatColor(density));
+      bindHall(roomId, el);
+    });
+
+    animateCounter(counterSpan, today.target);
+  };
+
+  // -------------------------
+  // Boot only once when SVG exists
+  // -------------------------
+  const bootIfSVGExists = () => {
+    const hasSVG = !!document.querySelector("#svgMount svg");
+    if (!hasSVG) return false;
+
+    // ✅ منع إعادة ربط listeners
+    if (slider.dataset.bound === "1") {
+      updateMap(slider.value || 0);
+      return true;
+    }
+    slider.dataset.bound = "1";
+
+    slider.min = "0";
+    slider.max = String(dailyData.length - 1);
+    slider.step = "1";
+
+    slider.addEventListener("input", () => updateMap(slider.value), { passive: true });
+
+    let isPlaying = false;
+    let playTimer = null;
+
+    const setPlayUI = () => {
+      playBtn.textContent = isPlaying ? "إيقاف مؤقت" : "تشغيل العرض";
+      playBtn.setAttribute("aria-pressed", isPlaying ? "true" : "false");
     };
 
-    const bindHall = (roomId, el) => {
-      if (!el || el.dataset.bound) return;
-      el.dataset.bound = "1";
-
-      // ✅ إصلاح iOS: إزالة الـ filter تماماً والاعتماد على الحدود فقط
-      const setHoverStroke = (on) => {
-        if (!on) {
-          el.style.removeProperty("stroke");
-          el.style.removeProperty("stroke-width");
-          return;
-        }
-        el.style.setProperty("stroke", "rgba(15,23,42,.90)", "important");
-        el.style.setProperty("stroke-width", "4px", "important");
-      };
-
-      // ✅ تحديث البيانات عند الدخول فقط لمنع اختناق الـ DOM
-      el.addEventListener("mouseenter", (e) => {
-        clearTimeout(hoverCloseTimer);
-        setHoverStroke(true);
-
-        const dayIdx = Number(slider.value) || 0;
-        const activeDay = dailyData[dayIdx];
-        const d = activeDay?.densities?.[roomId] ?? 0;
-        const vis = calculatedVisitors?.[roomId] ?? 0;
-
-        const ttName = document.querySelector("#tt-name");
-        const densityVal = document.querySelector("#densityVal");
-        const visitorsVal = document.querySelector("#visitorsVal");
-
-        if (ttName) ttName.textContent = hallNames[roomId] || roomId;
-        if (densityVal) densityVal.textContent = `${formatNumber(d)}%`;
-        if (visitorsVal) visitorsVal.textContent = formatNumber(vis);
-
-        if (e) {
-          positionTooltip(e);
-          tooltip.setAttribute("aria-hidden", "false");
-        }
-
-        openPanelWithData(roomId, dayIdx, d);
-      });
-
-      // ✅ إصلاح iOS: استخدام requestAnimationFrame لحركة التولتيب وفصلها عن النصوص
-      el.addEventListener("mousemove", (e) => {
-        requestAnimationFrame(() => positionTooltip(e));
-      });
-
-      el.addEventListener("mouseleave", () => {
-        tooltip.setAttribute("aria-hidden", "true");
-        setHoverStroke(false);
-
-        clearTimeout(hoverCloseTimer);
-        hoverCloseTimer = setTimeout(() => setPanel(false), 220);
-      });
-
-      // دعم الهواتف المحمولة
-      el.addEventListener("pointerdown", (e) => {
-        if (e.pointerType === "touch") {
-          const dayIdx = Number(slider.value) || 0;
-          const activeDay = dailyData[dayIdx];
-          const density = activeDay?.densities?.[roomId] ?? 0;
-          openPanelWithData(roomId, dayIdx, density);
-        }
-      });
+    const stopPlay = () => {
+      isPlaying = false;
+      if (playTimer) clearTimeout(playTimer);
+      playTimer = null;
+      setPlayUI();
     };
 
-    const updateMap = (dayIndex) => {
-      const idx = clamp(Number(dayIndex) || 0, 0, dailyData.length - 1);
-      const today = dailyData[idx];
+    const runPlay = () => {
+      if (!isPlaying) return;
 
-      dateDisplay.textContent = today.day;
-      calculatedVisitors = computeVisitorsForDay(idx);
+      const cur = Number(slider.value) || 0;
+      if (cur >= dailyData.length - 1) {
+        stopPlay();
+        playBtn.textContent = "إرجاع للبداية";
+        return;
+      }
 
-      Object.entries(today.densities).forEach(([roomId, density]) => {
-        const el = document.getElementById(roomId);
-        if (!el) return;
+      slider.value = String(cur + 1);
+      updateMap(slider.value);
 
-        applyFillDeep(el, getHeatColor(density));
-        bindHall(roomId, el); // Bind hover events
-      });
-
-      animateCounter(counterSpan, today.target);
+      playTimer = setTimeout(runPlay, prefersReducedMotion ? 0 : 1400);
     };
 
-    const bootIfSVGExists = () => {
-      const hasSVG = !!document.querySelector("#svgMount svg");
-      if (!hasSVG) return false;
+    // ✅ وقف التشغيل عند الانتقال لخلفية (مهم على iOS)
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stopPlay();
+    });
 
-      slider.min = "0";
-      slider.max = String(dailyData.length - 1);
-      slider.step = "1";
+    playBtn.addEventListener("click", () => {
+      if (!isPlaying && playBtn.textContent.includes("إرجاع")) {
+        slider.value = "0";
+        updateMap(0);
+        playBtn.textContent = "تشغيل العرض";
+      }
 
-      slider.addEventListener("input", () => updateMap(slider.value), { passive: true });
+      isPlaying = !isPlaying;
+      setPlayUI();
 
-      let isPlaying = false;
-      let playTimer = null;
-
-      const setPlayUI = () => {
-        playBtn.textContent = isPlaying ? "إيقاف مؤقت" : "تشغيل العرض";
-        playBtn.setAttribute("aria-pressed", isPlaying ? "true" : "false");
-      };
-
-      const stopPlay = () => {
-        isPlaying = false;
-        if (playTimer) clearTimeout(playTimer);
-        playTimer = null;
-        setPlayUI();
-      };
-
-      const runPlay = () => {
-        if (!isPlaying) return;
-
-        const cur = Number(slider.value) || 0;
-        if (cur >= dailyData.length - 1) {
-          stopPlay();
-          playBtn.textContent = "إرجاع للبداية";
-          return;
-        }
-
-        slider.value = String(cur + 1);
-        updateMap(slider.value);
-
-        playTimer = setTimeout(runPlay, prefersReducedMotion ? 0 : 1400);
-      };
-
-      playBtn.addEventListener("click", () => {
-        if (!isPlaying && playBtn.textContent.includes("إرجاع")) {
+      if (isPlaying) {
+        if (Number(slider.value) >= dailyData.length - 1) {
           slider.value = "0";
           updateMap(0);
-          playBtn.textContent = "تشغيل العرض";
         }
+        runPlay();
+      } else {
+        stopPlay();
+      }
+    });
 
-        isPlaying = !isPlaying;
-        setPlayUI();
-
-        if (isPlaying) {
-          if (Number(slider.value) >= dailyData.length - 1) {
-            slider.value = "0";
-            updateMap(0);
-          }
-          runPlay();
-        } else {
-          stopPlay();
-        }
-      });
-
-      hallPanel?.addEventListener("mouseenter", () => {
-        clearTimeout(hoverCloseTimer);
-      });
-      hallPanel?.addEventListener("mouseleave", () => {
-        clearTimeout(hoverCloseTimer);
-        hoverCloseTimer = setTimeout(() => setPanel(false), 220);
-      });
-
-      updateMap(0);
-      return true;
-    };
-
-    if (!bootIfSVGExists()) {
-      const mo = new MutationObserver(() => {
-        if (bootIfSVGExists()) mo.disconnect();
-      });
-      mo.observe(svgMount, { childList: true, subtree: true });
-    }
+    updateMap(0);
+    return true;
   };
+
+  if (!bootIfSVGExists()) {
+    const mo = new MutationObserver(() => {
+      if (bootIfSVGExists()) mo.disconnect();
+    });
+    mo.observe(svgMount, { childList: true, subtree: true });
+  }
+};
 
   // -------------------------
   // Gallery (public images + pending uploads)

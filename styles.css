@@ -2472,3 +2472,52 @@ body.nav-open {
   }
 
 }
+
+/* =========================================
+   iOS / WhatsApp WebView FIXES (OVERRIDE)
+   ضع هذا آخر ملف CSS
+========================================= */
+
+/* عزل منطقة الخريطة لتقليل إعادة الرسم */
+.map-shell {
+  contain: layout paint;
+}
+
+/* 1) امنع فلاتر SVG الثقيلة (سبب شائع للـ crash على iOS) */
+#svgMount path,
+#svgMount rect,
+#svgMount polygon {
+  transition: fill 0.45s var(--ease-soft), stroke 0.16s var(--ease) !important;
+  will-change: auto !important; /* لا تستخدم will-change على مئات العناصر */
+}
+
+#svgMount path:hover,
+#svgMount rect:hover,
+#svgMount polygon:hover {
+  filter: none !important; /* احذف filter بالكامل */
+}
+
+/* على الموبايل ما في hover فعلي */
+@media (hover: none) {
+  #svgMount path:hover,
+  #svgMount rect:hover,
+  #svgMount polygon:hover {
+    filter: none !important;
+  }
+}
+
+/* 2) التولتيب: حركة بالـ transform فقط (أخف بكثير من left/top) */
+#tooltip {
+  top: 0 !important;
+  left: 0 !important;
+  will-change: transform !important;
+}
+
+/* 3) iOS/WebKit: أوقف blur/backdrop-filter (سبب رئيسي لانهيار WebKit) */
+@supports (-webkit-touch-callout: none) {
+  #tooltip,
+  .hall-panel {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
