@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>حفل الافتتاح - معرض دمشق الدولي للكتاب 2026</title>
+    <meta name="description" content="بيانات عن معرض دمشق الدولي للكتاب في دورته الاستثنائية" />
+    <meta name="theme-color" content="#0B1220" />
+    <meta name="color-scheme" content="light" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="icon" type="image/png" href="./Logo/icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./Logo/icon.png">
+
+    <!-- Tailwind (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;900&display=swap');
+
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#71112a',
+                        brand2: '#e95b0c',
+                        brandDark: '#3d0e2d',
+                        danger: '#c51a1b',
+                        success: '#16A34A',
+                        cream: '#f5eedc',
+                    },
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Chart.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Custom JS -->
+    <script defer src="scripts.js"></script>
+</head>
+
+<body class="min-h-screen bg-cream text-slate-900">
+    <!-- Skip link (Accessibility) -->
+    <a href="#main"
+        class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:right-4 focus:z-[2000] focus:bg-white focus:text-slate-900 focus:px-4 focus:py-2 focus:rounded-xl focus:shadow">
+        تخطي إلى المحتوى
+    </a>
+
+    <!-- Sticky Header -->
+    <header class="site-header shadow-sm " role="banner">
+        <div class="container mx-auto px-4 lg:px-6 relative ">
+            <div class="flex flex-wrap lg:flex-nowrap items-center justify-between py-3 lg:py-4 gap-4">
+
+                <a href="index.html" class="brand flex items-center gap-2 md:gap-4 shrink-0"
+                    aria-label="العودة لأعلى الصفحة">
+                    <div class="header-logos">
+                        <img src="./Logo/وزارة الثقافة.png" class="logo-ministry" alt="وزارة الثقافة">
+                        <span class="logo-divider"></span>
+                        <img src="./Logo/معرض دمشق الدولي للكتاب.png" class="logo-main" alt="معرض الكتاب">
+                    </div>
+                </a>
+
+                <div
+                    class="brand-text absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden md:flex flex-col items-center justify-center text-center w-max z-10">
+                    <div class="font-black text-[15px] lg:text-[15px] text-slate-800 leading-tight">
+                        إحصائيات معرض دمشق للكتاب
+                    </div>
+                    <div class="font-bold text-[10px] lg:text-xs text-brand mt-0.5">
+                        الدورة الاستثنائية
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <nav id="nav" class="nav" aria-label="التنقل داخل التقرير">
+                        <a class="nav-link" href="index.html#overview">نظرة عامة</a>
+                        <a class="nav-link" href="opening.html">حفل الافتتاح</a>
+                        <a class="nav-link" href="index.html#visitors">الزوار</a>
+                        <a class="nav-link" href="index.html#insights">الإنجازات</a>
+                        <a class="nav-link" href="index.html#program">البرنامج</a>
+                        <a class="nav-link" href="index.html#delegations">الوفود</a>
+                        <a class="nav-link" href="index.html#kids">قسم الطفل</a>
+                        <a class="nav-link" href="index.html#satisfaction">الرضا</a>
+                        <a class="nav-link" href="index.html#digital">الرقمي</a>
+                        <a class="nav-link" href="index.html#heatmap">الخريطة</a>
+                        <a class="nav-link" href="index.html#gallery">معرض الصور</a>
+                        <div class="nav-more" id="navMore" hidden>
+                            <button class="nav-more-btn" id="navMoreBtn" type="button" aria-expanded="false"
+                                aria-controls="navMoreMenu">
+                                المزيد
+                            </button>
+                            <div class="nav-more-menu" id="navMoreMenu" role="menu" aria-hidden="true"></div>
+                        </div>
+                    </nav>
+
+                    <button id="menuBtn" class="menu-btn shrink-0 lg:hidden" type="button" aria-label="فتح القائمة"
+                        aria-controls="nav" aria-expanded="false">
+                        <span></span><span></span><span></span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </header>
+    <!-- Sponsor bar -->
+    <div class="sponsor-bar" role="region" aria-label="الراعي الرسمي">
+        <div class="container mx-auto px-4 lg:px-6">
+            <div class="sponsor-inner">
+                <div class="sponsor-title">الراعي الرسمي</div>
+                <img src="./Logo/رئاسة الجمهورية العربية السورية.png" class="sponsor-logo" alt="الراعي الرسمي" />
+            </div>
+        </div>
+    </div>
+
+    <div id="navOverlay" class="nav-overlay" aria-hidden="true"></div>
+
+    <main id="main" class="container mx-auto px-6 py-10 space-y-12" role="main">
+        <!-- Opening Ceremony -->
+        <section id="opening" class="section-block reveal" aria-labelledby="openingTitle">
+            <div class="section-title border-brand">
+                <h2 id="openingTitle">حفل الافتتاح</h2>
+            </div>
+
+            <!-- Invitations & Attendance -->
+            <h3 class="font-bold text-lg mb-4 text-slate-800">إحصائيات الدعوات والحضور</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="stat-card border-brand">
+                    <div class="stat-label">الدعوات الرسمية المرسلة</div>
+                    <div class="stat-value text-brand">1,456</div>
+                </div>
+                <div class="stat-card border-brandDark">
+                    <div class="stat-label">الذين أكدوا الحضور</div>
+                    <div class="stat-value text-brandDark">1,417</div>
+                </div>
+                <div class="stat-card border-success">
+                    <div class="stat-label">العدد الفعلي للحضور</div>
+                    <div class="stat-value text-success">1,417</div>
+                    <div class="stat-note">(تم احتسابه استناداً إلى توزيع الهدايا)</div>
+                </div>
+            </div>
+
+            <!-- Survey Statistics -->
+            <h3 class="font-bold text-lg mb-4 text-slate-800">إحصائيات الاستبيان (نسبة الاستجابة 30%)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                <div class="card p-4 space-y-2">
+                    <div class="flex justify-between font-bold text-sm">
+                        <span>التجربة العامة (4 من 5)</span>
+                        <span class="text-brand">82%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2.5">
+                        <div class="bg-brand h-2.5 rounded-full" style="width: 82%"></div>
+                    </div>
+                </div>
+
+                <div class="card p-4 space-y-2">
+                    <div class="flex justify-between font-bold text-sm">
+                        <span>الديكور وتجهيزات القاعة</span>
+                        <span class="text-brandDark">85%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2.5">
+                        <div class="bg-brandDark h-2.5 rounded-full" style="width: 85%"></div>
+                    </div>
+                </div>
+
+                <div class="card p-4 space-y-2">
+                    <div class="flex justify-between font-bold text-sm">
+                        <span>سلاسة عملية الدخول</span>
+                        <span class="text-success">76%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2.5">
+                        <div class="bg-success h-2.5 rounded-full" style="width: 76%"></div>
+                    </div>
+                </div>
+
+                <div class="card p-4 space-y-2">
+                    <div class="flex justify-between font-bold text-sm">
+                        <span>الفقرات والعروض</span>
+                        <span class="text-brand2">79%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2.5">
+                        <div class="bg-brand2 h-2.5 rounded-full" style="width: 79%"></div>
+                    </div>
+                </div>
+
+                <div class="card p-4 space-y-2">
+                    <div class="flex justify-between font-bold text-sm">
+                        <span>جودة الضيافة</span>
+                        <span class="text-brand">88%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2.5">
+                        <div class="bg-brand h-2.5 rounded-full" style="width: 88%"></div>
+                    </div>
+                </div>
+
+                <div class="card p-4 space-y-2">
+                    <div class="flex justify-between font-bold text-sm">
+                        <span>كمية الطعام والمشروبات وفرتها</span>
+                        <span class="text-brandDark">91%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2.5">
+                        <div class="bg-brandDark h-2.5 rounded-full" style="width: 91%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Media Harvest -->
+            <h3 class="font-bold text-lg mb-4 text-slate-800">حصاد العمل الإعلامي (19/1/2026 - 5/2/2026)</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- Total Production -->
+                <div class="card border-t-4 border-brand">
+                    <h4 class="font-bold mb-4 flex items-center gap-2">
+                        <span class="text-xl">📹</span> الإنتاج الإعلامي (470 مادة)
+                    </h4>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-2 bg-slate-50 rounded">
+                            <span class="font-bold text-slate-700">فيديو</span>
+                            <span class="font-black text-brand">165</span>
+                        </div>
+                        <div class="flex justify-between items-center p-2 bg-slate-50 rounded">
+                            <span class="font-bold text-slate-700">تصميم غرافيكي</span>
+                            <span class="font-black text-brandDark">270</span>
+                        </div>
+                        <div class="flex justify-between items-center p-2 bg-slate-50 rounded">
+                            <span class="font-bold text-slate-700">ألبوم صور</span>
+                            <span class="font-black text-brand2">35</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Partners & Creators -->
+                <div class="card border-t-4 border-brand2">
+                    <h4 class="font-bold mb-4 flex items-center gap-2">
+                        <span class="text-xl">🤝</span> الشركاء وصناع المحتوى
+                    </h4>
+                    <div class="mb-4">
+                        <div class="text-sm text-slate-500 mb-1">صناع المحتوى</div>
+                        <p class="font-bold text-sm border-l-4 border-brand2 pl-2">
+                            توجيه 100 دعوة (40 عربياً و60 محلياً) أسفرت عن <span class="text-brand2 font-black">60
+                                مشاركة
+                                فعلية</span>.
+                        </p>
+                    </div>
+                    <hr class="my-3 border-slate-100">
+                    <div class="text-sm text-slate-500 mb-2">إنتاج عبر الشركاء (170 مادة)</div>
+                    <div class="grid grid-cols-2 gap-2 text-sm font-bold">
+                        <div class="p-2 bg-slate-50 rounded text-center">105 فيديو</div>
+                        <div class="p-2 bg-slate-50 rounded text-center">26 تصميم</div>
+                        <div class="p-2 bg-slate-50 rounded text-center">22 تصوير درون</div>
+                        <div class="p-2 bg-slate-50 rounded text-center">17 ألبوم صور</div>
+                    </div>
+                </div>
+
+                <!-- Press & Digital -->
+                <div class="flex flex-col gap-4">
+                    <div class="card p-4 border-l-4 border-success">
+                        <h4 class="font-bold text-sm mb-2">التغطية الصحفية والرسمية</h4>
+                        <ul class="text-sm text-slate-600 space-y-1 list-disc list-inside">
+                            <li>حضور إعلامي تجاوز <strong>200</strong> صحفي وإعلامي.</li>
+                            <li>دعوة <strong>80</strong> قناة ووكالة.</li>
+                            <li>دعوة <strong>80</strong> صحفياً للتغطية داخلياً.</li>
+                            <li><strong>19</strong> مساهمة ترويجية من كتّاب وشخصيات.</li>
+                        </ul>
+                    </div>
+
+                    <div class="score-card !p-4 !gap-2 !shadow-none">
+                        <h4 class="score-title text-base !mb-1">النشر الرقمي</h4>
+                        <div class="score-list !gap-2">
+                            <div class="score-row !pb-2">
+                                <span>صفحة شريكة في النشر</span>
+                                <b>138</b>
+                            </div>
+                            <div class="score-row !pb-2">
+                                <span>منشور عبر الشركاء</span>
+                                <b class="text-brand2">650</b>
+                            </div>
+                            <div class="score-row !pb-0 !border-0">
+                                <span>منشور عبر المنصات الرسمية</span>
+                                <b class="text-success">666</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer bg-[#0B1220] pt-12 pb-8 border-t border-slate-800 mt-20" role="contentinfo">
+        <div class="container mx-auto px-4 md:px-6">
+
+            <div
+                class="footer-logos flex justify-center items-center gap-5 md:gap-12 mb-10 pb-8 border-b border-slate-800/60">
+
+                <img src="./Logo/وزارة الثقافة أبيض.png" class="footer-logo-ministry" alt="وزارة الثقافة">
+                <img src="./Logo/معرض الكتاب ابيض.png" class="footer-logo-main" alt="معرض الكتاب">
+            </div>
+
+            <div class="footer-info text-center max-w-2xl mx-auto space-y-3">
+                <h4 class="text-lg md:text-2xl font-black text-brand2 mb-2">إحصائيات حفل افتتاح معرض دمشق الدولي
+                    للكتاب<br><span class="text-sm md:text-lg text-brand mt-1 inline-block">الدورة الاستثنائية</span>
+                </h4>
+                <p class="text-xs md:text-base font-medium text-slate-300 leading-relaxed">
+                    بإشراف أ. سعد نعسان مدير معرض دمشق الدولي للكتاب – تنفيذ أ. ليلى الدبس
+                    <br>
+                    <span class="text-slate-400 text-[11px] md:text-sm mt-1.5 inline-block">فريق إدارة الفعاليات / لجنة
+                        الإحصاء
+                        والتقييم</span>
+                </p>
+            </div>
+
+            <div
+                class="mt-10 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-[10px] md:text-xs font-bold uppercase">
+                <span>جميع الحقوق محفوظة &copy; 2026</span>
+                <span
+                    class="bg-slate-800/50 px-4 py-2 rounded-full text-slate-300 border border-slate-700/50 transition-colors hover:bg-slate-800">
+                    تم التحديث في: فبراير 2026
+                </span>
+            </div>
+
+        </div>
+    </footer>
+</body>
+
+</html>

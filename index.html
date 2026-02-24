@@ -85,7 +85,7 @@
         <div class="flex items-center gap-4">
           <nav id="nav" class="nav" aria-label="التنقل داخل التقرير">
             <a class="nav-link" href="#overview">نظرة عامة</a>
-            <a class="nav-link" href="#opening">حفل الافتتاح</a>
+            <a class="nav-link" href="opening.html">حفل الافتتاح</a>
             <a class="nav-link" href="#visitors">الزوار</a>
             <a class="nav-link" href="#insights">الإنجازات</a>
             <a class="nav-link" href="#program">البرنامج</a>
@@ -94,6 +94,7 @@
             <a class="nav-link" href="#satisfaction">الرضا</a>
             <a class="nav-link" href="#digital">الرقمي</a>
             <a class="nav-link" href="#heatmap">الخريطة</a>
+            <a class="nav-link" href="#bookcloud">سحابة الكتب</a>
             <a class="nav-link" href="#gallery">معرض الصور</a>
             <div class="nav-more" id="navMore" hidden>
               <button class="nav-more-btn" id="navMoreBtn" type="button" aria-expanded="false"
@@ -161,173 +162,7 @@
 
   <main id="main" class="container mx-auto px-6 py-10 space-y-12" role="main">
 
-    <!-- Opening Ceremony -->
-    <section id="opening" class="section-block reveal" aria-labelledby="openingTitle">
-      <div class="section-title border-brand">
-        <h2 id="openingTitle">حفل الافتتاح</h2>
-      </div>
-
-      <!-- Invitations & Attendance -->
-      <h3 class="font-bold text-lg mb-4 text-slate-800">إحصائيات الدعوات والحضور</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div class="stat-card border-brand">
-          <div class="stat-label">الدعوات الرسمية المرسلة</div>
-          <div class="stat-value text-brand">1,456</div>
-        </div>
-        <div class="stat-card border-brandDark">
-          <div class="stat-label">الذين أكدوا الحضور</div>
-          <div class="stat-value text-brandDark">1,417</div>
-        </div>
-        <div class="stat-card border-success">
-          <div class="stat-label">العدد الفعلي للحضور</div>
-          <div class="stat-value text-success">1,417</div>
-          <div class="stat-note">(تم احتسابه استناداً إلى توزيع الهدايا)</div>
-        </div>
-      </div>
-
-      <!-- Survey Statistics -->
-      <h3 class="font-bold text-lg mb-4 text-slate-800">إحصائيات الاستبيان (نسبة الاستجابة 30%)</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-        <div class="card p-4 space-y-2">
-          <div class="flex justify-between font-bold text-sm">
-            <span>التجربة العامة (4 من 5)</span>
-            <span class="text-brand">82%</span>
-          </div>
-          <div class="w-full bg-slate-200 rounded-full h-2.5">
-            <div class="bg-brand h-2.5 rounded-full" style="width: 82%"></div>
-          </div>
-        </div>
-
-        <div class="card p-4 space-y-2">
-          <div class="flex justify-between font-bold text-sm">
-            <span>الديكور وتجهيزات القاعة</span>
-            <span class="text-brandDark">85%</span>
-          </div>
-          <div class="w-full bg-slate-200 rounded-full h-2.5">
-            <div class="bg-brandDark h-2.5 rounded-full" style="width: 85%"></div>
-          </div>
-        </div>
-
-        <div class="card p-4 space-y-2">
-          <div class="flex justify-between font-bold text-sm">
-            <span>سلاسة عملية الدخول</span>
-            <span class="text-success">76%</span>
-          </div>
-          <div class="w-full bg-slate-200 rounded-full h-2.5">
-            <div class="bg-success h-2.5 rounded-full" style="width: 76%"></div>
-          </div>
-        </div>
-
-        <div class="card p-4 space-y-2">
-          <div class="flex justify-between font-bold text-sm">
-            <span>الفقرات والعروض</span>
-            <span class="text-brand2">79%</span>
-          </div>
-          <div class="w-full bg-slate-200 rounded-full h-2.5">
-            <div class="bg-brand2 h-2.5 rounded-full" style="width: 79%"></div>
-          </div>
-        </div>
-
-        <div class="card p-4 space-y-2">
-          <div class="flex justify-between font-bold text-sm">
-            <span>جودة الضيافة</span>
-            <span class="text-brand">88%</span>
-          </div>
-          <div class="w-full bg-slate-200 rounded-full h-2.5">
-            <div class="bg-brand h-2.5 rounded-full" style="width: 88%"></div>
-          </div>
-        </div>
-
-        <div class="card p-4 space-y-2">
-          <div class="flex justify-between font-bold text-sm">
-            <span>كمية الطعام والمشروبات وفرتها</span>
-            <span class="text-brandDark">91%</span>
-          </div>
-          <div class="w-full bg-slate-200 rounded-full h-2.5">
-            <div class="bg-brandDark h-2.5 rounded-full" style="width: 91%"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Media Harvest -->
-      <h3 class="font-bold text-lg mb-4 text-slate-800">حصاد العمل الإعلامي (19/1/2026 - 5/2/2026)</h3>
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        <!-- Total Production -->
-        <div class="card border-t-4 border-brand">
-          <h4 class="font-bold mb-4 flex items-center gap-2">
-            <span class="text-xl">📹</span> الإنتاج الإعلامي (470 مادة)
-          </h4>
-          <div class="space-y-3">
-            <div class="flex justify-between items-center p-2 bg-slate-50 rounded">
-              <span class="font-bold text-slate-700">فيديو</span>
-              <span class="font-black text-brand">165</span>
-            </div>
-            <div class="flex justify-between items-center p-2 bg-slate-50 rounded">
-              <span class="font-bold text-slate-700">تصميم غرافيكي</span>
-              <span class="font-black text-brandDark">270</span>
-            </div>
-            <div class="flex justify-between items-center p-2 bg-slate-50 rounded">
-              <span class="font-bold text-slate-700">ألبوم صور</span>
-              <span class="font-black text-brand2">35</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Partners & Creators -->
-        <div class="card border-t-4 border-brand2">
-          <h4 class="font-bold mb-4 flex items-center gap-2">
-            <span class="text-xl">🤝</span> الشركاء وصناع المحتوى
-          </h4>
-          <div class="mb-4">
-            <div class="text-sm text-slate-500 mb-1">صناع المحتوى</div>
-            <p class="font-bold text-sm border-l-4 border-brand2 pl-2">
-              توجيه 100 دعوة (40 عربياً و60 محلياً) أسفرت عن <span class="text-brand2 font-black">60 مشاركة
-                فعلية</span>.
-            </p>
-          </div>
-          <hr class="my-3 border-slate-100">
-          <div class="text-sm text-slate-500 mb-2">إنتاج عبر الشركاء (170 مادة)</div>
-          <div class="grid grid-cols-2 gap-2 text-sm font-bold">
-            <div class="p-2 bg-slate-50 rounded text-center">105 فيديو</div>
-            <div class="p-2 bg-slate-50 rounded text-center">26 تصميم</div>
-            <div class="p-2 bg-slate-50 rounded text-center">22 تصوير درون</div>
-            <div class="p-2 bg-slate-50 rounded text-center">17 ألبوم صور</div>
-          </div>
-        </div>
-
-        <!-- Press & Digital -->
-        <div class="flex flex-col gap-4">
-          <div class="card p-4 border-l-4 border-success">
-            <h4 class="font-bold text-sm mb-2">التغطية الصحفية والرسمية</h4>
-            <ul class="text-sm text-slate-600 space-y-1 list-disc list-inside">
-              <li>حضور إعلامي تجاوز <strong>200</strong> صحفي وإعلامي.</li>
-              <li>دعوة <strong>80</strong> قناة ووكالة.</li>
-              <li>دعوة <strong>80</strong> صحفياً للتغطية داخلياً.</li>
-              <li><strong>19</strong> مساهمة ترويجية من كتّاب وشخصيات.</li>
-            </ul>
-          </div>
-
-          <div class="score-card !p-4 !gap-2 !shadow-none">
-            <h4 class="score-title text-base !mb-1">النشر الرقمي</h4>
-            <div class="score-list !gap-2">
-              <div class="score-row !pb-2">
-                <span>صفحة شريكة في النشر</span>
-                <b>138</b>
-              </div>
-              <div class="score-row !pb-2">
-                <span>منشور عبر الشركاء</span>
-                <b class="text-brand2">650</b>
-              </div>
-              <div class="score-row !pb-0 !border-0">
-                <span>منشور عبر المنصات الرسمية</span>
-                <b class="text-success">666</b>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Opening Ceremony Moved to opening.html -->
 
     <!-- Visitors Snapshot -->
     <section id="visitors" class="section-block reveal" aria-labelledby="visitorsTitle">
@@ -949,50 +784,67 @@
 
         <div id="svgMount" class="svg-mount">
           <!--SVG-->
-          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 4535.52 3174.96">
-  <g id="Layer_1" data-name="Layer 1">
-    <image width="18898" height="13229" transform="scale(.24)" xlink:href="uploads/heatmap_bg.png"/>
-  </g>
-  <g id="H11">
-    <rect x="574.77" y="986.21" width="410.55" height="410.55" style="fill: #fff; stroke: #000; stroke-miterlimit: 10;"/>
-  </g>
-  <g id="H2">
-    <polygon points="4044.09 1397.36 3629.19 1396.77 3628.68 988.09 4044.34 988.09 4044.09 1397.36" style="fill: #fff; stroke: #000; stroke-miterlimit: 10;"/>
-  </g>
-  <g id="H26">
-    <rect x="997.57" y="1068.94" width="539.23" height="327.83" style="fill: #fff;"/>
-  </g>
-  <g id="H25">
-    <rect x="3080" y="1068.94" width="539.23" height="327.83" style="fill: #fff;"/>
-  </g>
-  <g id="H10">
-    <polygon points="1849.83 1298.72 1742.94 1396.77 1547.53 1396.77 1547.53 993.87 1987.19 993.87 1985.32 1167.66 1849.83 1298.72" style="fill: #fff;"/>
-  </g>
-  <g id="H10.1">
-    <polygon points="1922.21 1240.55 2081.66 1241.7 2082.38 1475.62 2044.94 1513.15 1821.53 1513.06 1821.53 1335.87 1922.21 1240.55" style="fill: #fff;"/>
-  </g>
-  <g id="H1.1">
-    <polygon points="2694.21 1240.85 2536.68 1240.6 2537.23 1467.11 2582.38 1514.04 2801.96 1512.77 2802.47 1342.21 2694.21 1240.85" style="fill: #fff;"/>
-  </g>
-  <g id="H27">
-    <rect x="1492.17" y="731.15" width="184.85" height="140.26" style="fill: #fff; stroke: #000; stroke-miterlimit: 10;"/>
-  </g>
-  <g id="H28">
-    <rect x="1687.74" y="731.15" width="223.15" height="140.26" style="fill: #fff; stroke: #000; stroke-miterlimit: 10;"/>
-  </g>
-  <g id="PR">
-    <polygon points="1821.53 1678.72 2033.62 1678.72 2082.38 1728.26 2082.38 1926.38 1983.06 1926.38 1821.53 1765.53 1821.53 1678.72" style="fill: #fff; stroke: #000; stroke-miterlimit: 10;"/>
-  </g>
-  <g id="VIP">
-    <path d="M2576.17,1678.72s-39.15,37.28-39.49,39.57,0,208.09,0,208.09h110.72l155.06-155.23v-92.43h-226.3Z" style="fill: #fff; stroke: #000; stroke-miterlimit: 10;"/>
-  </g>
-  <g id="H41">
-    <rect x="2983.91" y="756" width="171.57" height="115.91" style="fill: #fff; stroke: #000; stroke-miterlimit: 10;"/>
-  </g>
-  <g id="H1">
-    <polygon points="2766.3 1298.72 2873.19 1396.77 3068.6 1396.77 3068.6 993.87 2628.94 993.87 2630.81 1167.66 2766.3 1298.72" style="fill: #fff;"/>
-  </g>
-</svg>
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 4535.52 3174.96">
+            <g id="Layer_1" data-name="Layer 1">
+              <image width="18898" height="13229" transform="scale(.24)" xlink:href="uploads/heatmap_bg.png" />
+            </g>
+            <g id="H11">
+              <rect x="574.77" y="986.21" width="410.55" height="410.55"
+                style="fill: #fff; stroke: #000; stroke-miterlimit: 10;" />
+            </g>
+            <g id="H2">
+              <polygon points="4044.09 1397.36 3629.19 1396.77 3628.68 988.09 4044.34 988.09 4044.09 1397.36"
+                style="fill: #fff; stroke: #000; stroke-miterlimit: 10;" />
+            </g>
+            <g id="H26">
+              <rect x="997.57" y="1068.94" width="539.23" height="327.83" style="fill: #fff;" />
+            </g>
+            <g id="H25">
+              <rect x="3080" y="1068.94" width="539.23" height="327.83" style="fill: #fff;" />
+            </g>
+            <g id="H10">
+              <polygon
+                points="1849.83 1298.72 1742.94 1396.77 1547.53 1396.77 1547.53 993.87 1987.19 993.87 1985.32 1167.66 1849.83 1298.72"
+                style="fill: #fff;" />
+            </g>
+            <g id="H10.1">
+              <polygon
+                points="1922.21 1240.55 2081.66 1241.7 2082.38 1475.62 2044.94 1513.15 1821.53 1513.06 1821.53 1335.87 1922.21 1240.55"
+                style="fill: #fff;" />
+            </g>
+            <g id="H1.1">
+              <polygon
+                points="2694.21 1240.85 2536.68 1240.6 2537.23 1467.11 2582.38 1514.04 2801.96 1512.77 2802.47 1342.21 2694.21 1240.85"
+                style="fill: #fff;" />
+            </g>
+            <g id="H27">
+              <rect x="1492.17" y="731.15" width="184.85" height="140.26"
+                style="fill: #fff; stroke: #000; stroke-miterlimit: 10;" />
+            </g>
+            <g id="H28">
+              <rect x="1687.74" y="731.15" width="223.15" height="140.26"
+                style="fill: #fff; stroke: #000; stroke-miterlimit: 10;" />
+            </g>
+            <g id="PR">
+              <polygon
+                points="1821.53 1678.72 2033.62 1678.72 2082.38 1728.26 2082.38 1926.38 1983.06 1926.38 1821.53 1765.53 1821.53 1678.72"
+                style="fill: #fff; stroke: #000; stroke-miterlimit: 10;" />
+            </g>
+            <g id="VIP">
+              <path d="M2576.17,1678.72s-39.15,37.28-39.49,39.57,0,208.09,0,208.09h110.72l155.06-155.23v-92.43h-226.3Z"
+                style="fill: #fff; stroke: #000; stroke-miterlimit: 10;" />
+            </g>
+            <g id="H41">
+              <rect x="2983.91" y="756" width="171.57" height="115.91"
+                style="fill: #fff; stroke: #000; stroke-miterlimit: 10;" />
+            </g>
+            <g id="H1">
+              <polygon
+                points="2766.3 1298.72 2873.19 1396.77 3068.6 1396.77 3068.6 993.87 2628.94 993.87 2630.81 1167.66 2766.3 1298.72"
+                style="fill: #fff;" />
+            </g>
+          </svg>
 
         </div>
       </div>
@@ -1010,13 +862,13 @@
       <div class="partners-wrapper">
         <div class="partners-track">
           <div class="partner-logo">
-            <img src="./Logo/الأمانة العامة.jpeg" alt="شريك 1" loading="lazy">
+            <img src="./Logo/الأمانة العامة.jpg" alt="شريك 1" loading="lazy">
           </div>
           <div class="partner-logo">
             <img src="./Logo/المؤسسة السورية للمعارض.jpeg" alt="شريك 2" loading="lazy">
           </div>
           <div class="partner-logo">
-            <img src="./Logo/رئاسة الجمهورية العربية السورية.png" alt="شريك 3" loading="lazy">
+            <img src="./Logo/رئاسة الجمهورية العربية السورية.jpg" alt="شريك 3" loading="lazy">
           </div>
           <div class="partner-logo">
             <img src="./Logo/محافظة دمشق.png" alt="شريك 4" loading="lazy">
@@ -1026,7 +878,7 @@
             <img src="./Logo/وزارة الاعلام.jpeg" alt="شريك 5" loading="lazy">
           </div>
           <div class="partner-logo">
-            <img src="./Logo/وزارة الثقافة السعودية.jpeg" alt="شريك 6" loading="lazy">
+            <img src="./Logo/وزارة الثقافة السعودية.jpg" alt="شريك 6" loading="lazy">
           </div>
           <div class="partner-logo">
             <img src="./Logo/وزارة الثقافة القطرية.png" alt="شريك 7" loading="lazy">
@@ -1036,13 +888,13 @@
           </div>
 
           <div class="partner-logo" aria-hidden="true">
-            <img src="./Logo/الأمانة العامة.jpeg" alt="" loading="lazy">
+            <img src="./Logo/الأمانة العامة.jpg" alt="" loading="lazy">
           </div>
           <div class="partner-logo" aria-hidden="true">
             <img src="./Logo/المؤسسة السورية للمعارض.jpeg" alt="" loading="lazy">
           </div>
           <div class="partner-logo" aria-hidden="true">
-            <img src="./Logo/رئاسة الجمهورية العربية السورية.png" alt="" loading="lazy">
+            <img src="./Logo/رئاسة الجمهورية العربية السورية.jpg" alt="" loading="lazy">
           </div>
           <div class="partner-logo" aria-hidden="true">
             <img src="./Logo/محافظة دمشق.png" alt="" loading="lazy">
@@ -1051,7 +903,7 @@
             <img src="./Logo/وزارة الاعلام.jpeg" alt="" loading="lazy">
           </div>
           <div class="partner-logo" aria-hidden="true">
-            <img src="./Logo/وزارة الثقافة السعودية.jpeg" alt="" loading="lazy">
+            <img src="./Logo/وزارة الثقافة السعودية.jpg" alt="" loading="lazy">
           </div>
           <div class="partner-logo" aria-hidden="true">
             <img src="./Logo/وزارة الثقافة القطرية.png" alt="" loading="lazy">
@@ -1063,6 +915,178 @@
       </div>
     </section>
 
+    <!-- سحابة الكتب المفضلة -->
+    <section id="bookcloud" class="section-block reveal" aria-labelledby="bookcloudTitle">
+      <div class="section-title border-brand2">
+        <h2 id="bookcloudTitle">كتابك المفضل من المعرض</h2>
+        <span class="text-xs text-slate-500 font-bold">شارك اسم الكتاب الذي اشتريته</span>
+      </div>
+
+      <!-- Submission form -->
+      <div class="bookcloud-form-wrap card border-t-4 border-brand2 mb-8">
+        <p class="text-sm text-slate-600 mb-4">أضف اسم كتابك المفضل الذي اشتريته من المعرض، وستظهر المشاركات بعد
+          المراجعة في السحابة التفاعلية أدناه.</p>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input id="bookTitleInput" type="text" maxlength="120" placeholder="أدخل عنوان الكتاب…"
+            class="bookcloud-input flex-1" aria-label="عنوان الكتاب" />
+          <button id="bookSubmitBtn" class="bookcloud-btn" type="button">إرسال</button>
+        </div>
+        <div id="bookSubmitStatus" class="mt-3 text-sm font-bold" aria-live="polite"></div>
+      </div>
+
+      <!-- Word cloud canvas -->
+      <div class="bookcloud-canvas-wrap card" aria-label="سحابة الكلمات التفاعلية">
+        <div id="bookCloudCanvas"></div>
+        <p id="bookCloudEmpty" class="bookcloud-empty hidden">لا توجد كتب معتمدة بعد. كن أول من يشارك!</p>
+      </div>
+
+      <script>
+          (function () {
+            const API = 'http://localhost:3000';
+            const COLORS = ['#71112a', '#e95b0c', '#3d0e2d', '#16A34A', '#1e40af', '#9333ea', '#ca8a04', '#0e7490'];
+
+            /* ── D3 + d3-cloud lazy loader ── */
+            function loadScript(src) {
+              return new Promise((resolve, reject) => {
+                if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+                const s = document.createElement('script');
+                s.src = src; s.onload = resolve; s.onerror = reject;
+                document.head.appendChild(s);
+              });
+            }
+
+            async function ensureLibs() {
+              await loadScript('https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js');
+              await loadScript('https://cdn.jsdelivr.net/npm/d3-cloud@1.2.7/build/d3.layout.cloud.min.js');
+            }
+
+            /* ── Render cloud ── */
+            function renderCloud(words) {
+              const container = document.getElementById('bookCloudCanvas');
+              const empty = document.getElementById('bookCloudEmpty');
+              container.innerHTML = '';
+
+              if (!words || words.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+              }
+              empty.classList.add('hidden');
+
+              const W = container.offsetWidth || 700;
+              const H = Math.max(320, Math.min(W * 0.55, 480));
+              const maxCount = Math.max(...words.map(w => w.count));
+              const minCount = Math.min(...words.map(w => w.count));
+              const fontScale = d3.scaleLog().domain([Math.max(minCount, 1), Math.max(maxCount, 2)]).range([14, 72]).clamp(true);
+
+              const layout = d3.layout.cloud()
+                .size([W, H])
+                .words(words.map(w => ({ text: w.title, size: fontScale(w.count), count: w.count })))
+                .padding(6)
+                .rotate(() => (Math.random() < 0.3 ? (Math.random() > 0.5 ? 90 : -90) : 0))
+                .font('Cairo, sans-serif')
+                .fontSize(d => d.size)
+                .on('end', draw);
+
+              layout.start();
+
+              function draw(placed) {
+                const svg = d3.select(container)
+                  .append('svg')
+                  .attr('width', W)
+                  .attr('height', H)
+                  .attr('aria-hidden', 'true');
+
+                const g = svg.append('g').attr('transform', `translate(${W / 2},${H / 2})`);
+
+                g.selectAll('text')
+                  .data(placed)
+                  .join('text')
+                  .style('font-family', 'Cairo, sans-serif')
+                  .style('font-weight', '900')
+                  .style('fill', (_, i) => COLORS[i % COLORS.length])
+                  .style('cursor', 'default')
+                  .attr('text-anchor', 'middle')
+                  .attr('transform', d => `translate(${d.x},${d.y}) rotate(${d.rotate})`)
+                  .attr('font-size', d => d.size)
+                  .text(d => d.text)
+                  .append('title').text(d => `${d.text} (${d.count})`);
+
+                /* hover glow */
+                g.selectAll('text')
+                  .on('mouseenter', function () {
+                    d3.select(this).transition().duration(150).attr('font-size', d => d.size * 1.15).style('opacity', 1);
+                  })
+                  .on('mouseleave', function () {
+                    d3.select(this).transition().duration(150).attr('font-size', d => d.size).style('opacity', 1);
+                  });
+              }
+            }
+
+            /* ── Fetch & render ── */
+            async function loadCloud() {
+              try {
+                await ensureLibs();
+                const res = await fetch(`${API}/books/approved`);
+                const data = await res.json();
+                renderCloud(data);
+              } catch (e) {
+                console.warn('Book cloud error:', e);
+              }
+            }
+
+            /* ── Submit ── */
+            document.getElementById('bookSubmitBtn').addEventListener('click', async () => {
+              const input = document.getElementById('bookTitleInput');
+              const status = document.getElementById('bookSubmitStatus');
+              const title = input.value.trim();
+              if (!title) { status.className = 'mt-3 text-sm font-bold text-danger'; status.textContent = 'يرجى إدخال عنوان الكتاب.'; return; }
+
+              const btn = document.getElementById('bookSubmitBtn');
+              btn.disabled = true;
+              status.className = 'mt-3 text-sm font-bold text-slate-500';
+              status.textContent = 'جارٍ الإرسال…';
+
+              try {
+                const res = await fetch(`${API}/books/submit`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ title })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                  status.className = 'mt-3 text-sm font-bold text-success';
+                  status.textContent = '✓ ' + data.message;
+                  input.value = '';
+                } else {
+                  status.className = 'mt-3 text-sm font-bold text-danger';
+                  status.textContent = data.message || 'حدث خطأ';
+                }
+              } catch {
+                status.className = 'mt-3 text-sm font-bold text-danger';
+                status.textContent = 'تعذّر الاتصال بالخادم.';
+              } finally {
+                btn.disabled = false;
+              }
+            });
+
+            /* ── Allow Enter key ── */
+            document.getElementById('bookTitleInput').addEventListener('keydown', e => {
+              if (e.key === 'Enter') document.getElementById('bookSubmitBtn').click();
+            });
+
+            /* ── Init ── */
+            loadCloud();
+
+            /* ── Re-render on resize ── */
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+              clearTimeout(resizeTimer);
+              resizeTimer = setTimeout(loadCloud, 300);
+            });
+          })();
+      </script>
+    </section>
+
     <!-- معرض الصور -->
 
     <section id="gallery" class="section-block reveal" aria-labelledby="galleryTitle">
@@ -1070,16 +1094,7 @@
         <h2 id="galleryTitle">معرض الصور</h2>
         <span class="text-xs text-brand font-bold">صور من المعرض</span>
       </div>
-
-      <div class="card mb-6 bg-cream border-brandDark/20 shadow-md">
-        <div class="gallery-wrapper py-6">
-          <div class="gallery-track" id="galleryTrack" aria-label="شريط صور متحرك">
-            <!-- JS will inject images -->
-          </div>
-        </div>
-      </div>
-
-      <!-- ميزة رفع الصور الجديدة -->
+      <!--  رفع الصور الجديدة -->
       <div class="card border-dashed border-2 border-brand/40 bg-white shadow-sm hover:shadow-lg transition-all">
         <div class="flex flex-col md:flex-row items-center justify-between gap-6 py-4 px-2">
           <div class="text-right">
@@ -1097,6 +1112,17 @@
           </div>
         </div>
       </div>
+
+
+      <div class="card mb-6 bg-cream border-brandDark/20 shadow-md">
+        <div class="gallery-wrapper py-6">
+          <div class="gallery-track" id="galleryTrack" aria-label="شريط صور متحرك">
+            <!-- JS will inject images -->
+          </div>
+        </div>
+      </div>
+
+
     </section>
 
 

@@ -2488,17 +2488,20 @@ body.nav-open {
 #svgMount rect,
 #svgMount polygon {
   transition: fill 0.45s var(--ease-soft), stroke 0.16s var(--ease) !important;
-  will-change: auto !important; /* لا تستخدم will-change على مئات العناصر */
+  will-change: auto !important;
+  /* لا تستخدم will-change على مئات العناصر */
 }
 
 #svgMount path:hover,
 #svgMount rect:hover,
 #svgMount polygon:hover {
-  filter: none !important; /* احذف filter بالكامل */
+  filter: none !important;
+  /* احذف filter بالكامل */
 }
 
 /* على الموبايل ما في hover فعلي */
 @media (hover: none) {
+
   #svgMount path:hover,
   #svgMount rect:hover,
   #svgMount polygon:hover {
@@ -2515,9 +2518,227 @@ body.nav-open {
 
 /* 3) iOS/WebKit: أوقف blur/backdrop-filter (سبب رئيسي لانهيار WebKit) */
 @supports (-webkit-touch-callout: none) {
+
   #tooltip,
   .hall-panel {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
+}
+
+/* =========================================
+   Word Cloud
+========================================= */
+#wordCloudContainer svg {
+  width: 100%;
+  height: 100%;
+}
+
+#wordCloudContainer g text {
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+#wordCloudContainer g text:hover {
+  filter: drop-shadow(0px 4px 8px rgba(113, 17, 42, 0.4));
+  z-index: 10;
+}
+
+/* =========================================
+   Book Word-Cloud Section
+========================================= */
+
+/* Submission form */
+.bookcloud-input {
+  border: 2px solid var(--border-strong);
+  border-radius: 14px;
+  padding: 12px 18px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  background: #fff;
+  transition: border-color .18s var(--ease), box-shadow .18s var(--ease);
+  width: 100%;
+}
+
+.bookcloud-input:focus {
+  outline: none;
+  border-color: var(--brand2);
+  box-shadow: 0 0 0 3px rgba(233, 91, 12, 0.15);
+}
+
+.bookcloud-btn {
+  background: linear-gradient(135deg, var(--brand2), #c54a09);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 32px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 900;
+  font-size: 15px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform .18s var(--ease), box-shadow .18s var(--ease), opacity .18s;
+  box-shadow: 0 6px 18px rgba(233, 91, 12, 0.35);
+}
+
+.bookcloud-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(233, 91, 12, 0.45);
+}
+
+.bookcloud-btn:active {
+  transform: scale(.97);
+}
+
+.bookcloud-btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Canvas container */
+.bookcloud-canvas-wrap {
+  overflow: hidden;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bookcloud-canvas-wrap #bookCloudCanvas {
+  width: 100%;
+}
+
+.bookcloud-canvas-wrap svg {
+  display: block;
+}
+
+/* Empty state */
+.bookcloud-empty {
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 15px;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.bookcloud-empty.hidden {
+  display: none;
+}
+
+/* =========================================
+   Admin Panel — Tabs
+========================================= */
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0;
+}
+
+.admin-tab-btn {
+  padding: 10px 22px;
+  border: none;
+  background: transparent;
+  font-family: 'Cairo', sans-serif;
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color .18s, border-color .18s;
+  border-radius: 0;
+}
+
+.admin-tab-btn.active {
+  color: var(--brand);
+  border-bottom-color: var(--brand);
+}
+
+.admin-tab-panel {
+  display: none;
+}
+
+.admin-tab-panel.active {
+  display: block;
+}
+
+/* Book review rows */
+.book-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-xs);
+  transition: transform .16s var(--ease);
+}
+
+.book-row:hover {
+  transform: translateY(-1px);
+}
+
+.book-row-title {
+  font-weight: 900;
+  font-size: 15px;
+  color: var(--text);
+  flex: 1;
+  text-align: right;
+}
+
+.book-row-meta {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.book-row-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Approved books table */
+.approved-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 12px;
+}
+
+.approved-table th {
+  text-align: right;
+  padding: 10px 14px;
+  background: #f8fafc;
+  border-bottom: 2px solid var(--border);
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.approved-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.approved-table tr:last-child td {
+  border-bottom: none;
+}
+
+.count-badge {
+  display: inline-block;
+  background: var(--brand2);
+  color: #fff;
+  border-radius: 999px;
+  padding: 2px 12px;
+  font-size: 12px;
+  font-weight: 900;
 }

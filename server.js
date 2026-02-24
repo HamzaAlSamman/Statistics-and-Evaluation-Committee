@@ -141,6 +141,84 @@ app.post('/reject', (req, res) => {
     });
 });
 
+// ─── Books API ─────────────────────────────────────────────────────────────
+const BOOKS_PENDING_JSON = path.join(__dirname, 'uploads', 'books_pending.json');
+const BOOKS_APPROVED_JSON = path.join(__dirname, 'uploads', 'books_approved.json');
+
+function readJson(filePath, fallback) {
+    try {
+        if (fs.existsSync(filePath)) return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    } catch { }
+    return fallback;
+}
+
+function writeJson(filePath, data) {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+}
+
+// POST /books/submit  { title: "عنوان الكتاب" }
+app.post('/books/submit', (req, res) => {
+    const title = (req.body && req.body.title || '').trim();
+    if (!title) return res.status(400).json({ message: 'يرجى إدخال عنوان الكتاب' });
+    if (title.length > 200) return res.status(400).json({ message: 'العنوان طويل جداً' });
+
+    const pending = readJson(BOOKS_PENDING_JSON, []);
+    const entry = { id: uuidv4(), title, submittedAt: new Date().toISOString() };
+    pending.push(entry);
+    writeJson(BOOKS_PENDING_JSON, pending);
+    res.json({ message: 'تم استلام إدخالك بنجاح وسيظهر بعد المراجعة' });
+});
+
+// GET /books/pending  (admin)
+app.get('/books/pending', (_req, res) => {
+    res.json(readJson(BOOKS_PENDING_JSON, []));
+});
+
+// POST /books/approve  { id: "uuid" }
+app.post('/books/approve', (req, res) => {
+    const { id } = req.body || {};
+    if (!id) return res.status(400).json({ message: 'id مطلوب' });
+
+    let pending = readJson(BOOKS_PENDING_JSON, []);
+    const idx = pending.findIndex(e => e.id === id);
+    if (idx === -1) return res.status(404).json({ message: 'الإدخال غير موجود' });
+
+    const [entry] = pending.splice(idx, 1);
+    writeJson(BOOKS_PENDING_JSON, pending);
+
+    // Merge into approved (case-insensitive, trimmed)
+    const approved = readJson(BOOKS_APPROVED_JSON, []);
+    const normalised = entry.title.trim().toLowerCase();
+    const existing = approved.find(a => a.title.trim().toLowerCase() === normalised);
+    if (existing) {
+        existing.count = (existing.count || 1) + 1;
+    } else {
+        approved.push({ title: entry.title.trim(), count: 1 });
+    }
+    writeJson(BOOKS_APPROVED_JSON, approved);
+    res.json({ message: 'تمت الموافقة ونشر الكتاب' });
+});
+
+// POST /books/reject  { id: "uuid" }
+app.post('/books/reject', (req, res) => {
+    const { id } = req.body || {};
+    if (!id) return res.status(400).json({ message: 'id مطلوب' });
+
+    let pending = readJson(BOOKS_PENDING_JSON, []);
+    const idx = pending.findIndex(e => e.id === id);
+    if (idx === -1) return res.json({ message: 'الإدخال غير موجود أو حُذف مسبقاً' });
+
+    pending.splice(idx, 1);
+    writeJson(BOOKS_PENDING_JSON, pending);
+    res.json({ message: 'تم الرفض والحذف' });
+});
+
+// GET /books/approved  (public)
+app.get('/books/approved', (_req, res) => {
+    res.json(readJson(BOOKS_APPROVED_JSON, []));
+});
+// ─── End Books API ──────────────────────────────────────────────────────────
+
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
     console.log(`Pending photos folder: ${PENDING_DIR}`);
