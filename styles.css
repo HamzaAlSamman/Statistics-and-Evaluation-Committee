@@ -741,6 +741,10 @@ canvas {
   border-top: 4px solid #2CA5E0;
 }
 
+.platform-card.brand-whatsapp {
+  border-top: 4px solid #25D366;
+}
+
 .platform-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-sm);

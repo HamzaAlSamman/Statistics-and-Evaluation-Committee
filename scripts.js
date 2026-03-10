@@ -522,8 +522,8 @@
     createChart("jobChart", {
       type: "bar",
       data: {
-        labels: ["الطلاب", "الأفراد", "العائلات", "أخرى"],
-        datasets: [{ label: "", data: [45, 20, 25, 10] }],
+        labels: ["الطلاب", "العائلات", "الأفراد", "أخرى"],
+        datasets: [{ label: "", data: [45, 25, 20, 10] }],
       },
       options: {
         indexAxis: "y",
@@ -600,8 +600,8 @@
     createChart("viewsByPlatformChart", {
       type: "bar",
       data: {
-        labels: ["فيسبوك", "إنستغرام", "تيليغرام", "X", "يوتيوب"],
-        datasets: [{ label: "إجمالي المشاهدات", data: [15950556, 18211223, 267840, 1845206, 978173] }],
+        labels: ["فيسبوك", "إنستغرام", "تيليغرام", "X", "يوتيوب", "واتساب"],
+        datasets: [{ label: "إجمالي المشاهدات", data: [15950556, 18211223, 267840, 1845206, 978173, 0] }],
       },
       options: {
         responsive: true,
@@ -625,10 +625,10 @@
     createChart("engagementVsPostsChart", {
       type: "bar",
       data: {
-        labels: ["فيسبوك", "إنستغرام", "تيليغرام", "X", "يوتيوب"],
+        labels: ["فيسبوك", "إنستغرام", "تيليغرام", "X", "يوتيوب", "واتساب"],
         datasets: [
-          { label: "المنشورات", data: [1046, 802, 1210, 457, 22] },
-          { label: "التفاعلات", data: [973605, 649883, 108000, 132327, 3072] },
+          { label: "المنشورات/الرسائل", data: [1046, 802, 1210, 457, 22, 350] },
+          { label: "التفاعلات", data: [973605, 649883, 108000, 132327, 3072, 4200] },
         ],
       },
       options: {
@@ -636,6 +636,44 @@
         maintainAspectRatio: false,
         scales: {
           y: { ticks: { callback: (v) => formatNumber(v) } },
+          x: { grid: { display: false } },
+        },
+      },
+    });
+
+    createChart("transportChart", {
+      type: "line",
+      data: {
+        labels: ["6 شباط", "7 شباط", "8 شباط", "9 شباط", "10 شباط", "11 شباط", "12 شباط", "13 شباط", "14 شباط", "15 شباط", "16 شباط"],
+        datasets: [{ 
+          label: "عدد الرحلات اليومية", 
+          data: [184, 211, 212, 202, 220, 222, 309, 312, 275, 301, 291],
+          borderColor: "#e95b0c",
+          backgroundColor: "rgba(233, 91, 12, 0.15)",
+          tension: 0.3,
+          fill: true,
+          pointBackgroundColor: "#71112a",
+          pointBorderColor: "#fff",
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { 
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `${formatNumber(ctx.raw)} رحلة`
+            }
+          }
+        },
+        scales: {
+          y: { 
+            beginAtZero: true,
+            ticks: { callback: (v) => formatNumber(v) } 
+          },
           x: { grid: { display: false } },
         },
       },
@@ -718,48 +756,48 @@
 
     const dailyData = [
       {
-        day: "6 شباط (الافتتاح)", target: 158450, events: { "H1.1": 5, "H10.1": 4, H28: 4 },
-        densities: { H1: 90, H2: 95, H10: 95, H11: 85, H25: 88, H26: 80, H27: 85, H28: 75, "H1.1": 60, "H10.1": 45, H41: 45, "12": 40, VIP: 10, PR: 45 }
+        day: "6 شباط", target: 86659, events: { "H1.1": 5, "H10.1": 4, H28: 4 },
+        densities: { H1: 70, H2: 71, H10: 71, H11: 68, H25: 70, H26: 69, H27: 70, H28: 68, "H1.1": 67, "H10.1": 64, H41: 62, "12": 64, VIP: 9, PR: 65 }
       },
       {
-        day: "7 شباط", target: 47563, events: { "H1.1": 9, "H10.1": 8, H28: 6 },
-        densities: { H1: 70, H2: 88, H10: 85, H11: 60, H25: 65, H26: 55, H27: 65, H28: 80, "H1.1": 85, "H10.1": 85, H41: 45, "12": 40, VIP: 8, PR: 45 }
+        day: "7 شباط", target: 99376, events: { "H1.1": 5, "H10.1": 4, H28: 5 },
+        densities: { H1: 76, H2: 77, H10: 77, H11: 74, H25: 76, H26: 75, H27: 76, H28: 74, "H1.1": 72, "H10.1": 69, H41: 67, "12": 69, VIP: 10, PR: 71 }
       },
       {
-        day: "8 شباط", target: 65725, events: { "H1.1": 9, "H10.1": 3, H28: 4 },
-        densities: { H1: 80, H2: 95, H10: 92, H11: 70, H25: 75, H26: 65, H27: 75, H28: 60, "H1.1": 85, "H10.1": 45, H41: 55, "12": 50, VIP: 12, PR: 50 }
+        day: "8 شباط", target: 99847, events: { "H1.1": 5, "H10.1": 4, H28: 5 },
+        densities: { H1: 76, H2: 78, H10: 78, H11: 74, H25: 76, H26: 75, H27: 76, H28: 74, "H1.1": 72, "H10.1": 69, H41: 67, "12": 69, VIP: 10, PR: 71 }
       },
       {
-        day: "9 شباط", target: 82300, events: { "H1.1": 4, "H10.1": 2, H28: 3 },
-        densities: { H1: 82, H2: 96, H10: 95, H11: 72, H25: 78, H26: 68, H27: 78, H28: 50, "H1.1": 55, "H10.1": 35, H41: 60, "12": 55, VIP: 10, PR: 55 }
+        day: "9 شباط", target: 95137, events: { "H1.1": 5, "H10.1": 4, H28: 5 },
+        densities: { H1: 74, H2: 75, H10: 75, H11: 72, H25: 74, H26: 73, H27: 74, H28: 72, "H1.1": 70, "H10.1": 68, H41: 66, "12": 67, VIP: 10, PR: 69 }
       },
       {
-        day: "10 شباط", target: 94150, events: { "H1.1": 4, "H10.1": 3, H28: 5 },
-        densities: { H1: 85, H2: 98, H10: 96, H11: 75, H25: 82, H26: 72, H27: 82, H28: 65, "H1.1": 55, "H10.1": 45, H41: 35, "12": 30, VIP: 5, PR: 35 }
+        day: "10 شباط", target: 103614, events: { "H1.1": 6, "H10.1": 4, H28: 5 },
+        densities: { H1: 78, H2: 79, H10: 79, H11: 76, H25: 78, H26: 77, H27: 78, H28: 76, "H1.1": 74, "H10.1": 71, H41: 69, "12": 70, VIP: 11, PR: 72 }
       },
       {
-        day: "11 شباط", target: 112600, events: { "H1.1": 4, "H10.1": 2, H28: 5 },
-        densities: { H1: 88, H2: 100, H10: 98, H11: 80, H25: 85, H26: 78, H27: 85, H28: 65, "H1.1": 55, "H10.1": 35, H41: 40, "12": 35, VIP: 6, PR: 40 }
+        day: "11 شباط", target: 104556, events: { "H1.1": 6, "H10.1": 4, H28: 5 },
+        densities: { H1: 78, H2: 80, H10: 80, H11: 76, H25: 78, H26: 77, H27: 78, H28: 76, "H1.1": 74, "H10.1": 71, H41: 69, "12": 71, VIP: 11, PR: 73 }
       },
       {
-        day: "12 شباط", target: 158400, events: { "H1.1": 5, "H10.1": 3, H28: 5 },
-        densities: { H1: 90, H2: 100, H10: 100, H11: 85, H25: 90, H26: 85, H27: 90, H28: 80, "H1.1": 65, "H10.1": 45, H41: 45, "12": 40, VIP: 8, PR: 45 }
+        day: "12 شباط", target: 145531, events: { "H1.1": 8, "H10.1": 6, H28: 7 },
+        densities: { H1: 97, H2: 99, H10: 99, H11: 94, H25: 97, H26: 95, H27: 97, H28: 94, "H1.1": 91, "H10.1": 87, H41: 84, "12": 86, VIP: 15, PR: 89 }
       },
       {
-        day: "13 شباط (ذروة الزحام)", target: 245500, events: { "H1.1": 8, "H10.1": 6, H28: 7 },
+        day: "13 شباط (ذروة الزحام)", target: 146944, events: { "H1.1": 8, "H10.1": 6, H28: 7 },
         densities: { H1: 98, H2: 100, H10: 100, H11: 95, H25: 98, H26: 96, H27: 98, H28: 95, "H1.1": 92, "H10.1": 88, H41: 85, "12": 87, VIP: 15, PR: 90 }
       },
       {
-        day: "14 شباط", target: 155000, events: { "H1.1": 5, "H10.1": 4, H28: 4 },
-        densities: { H1: 88, H2: 92, H10: 90, H11: 80, H25: 85, H26: 75, H27: 85, H28: 70, "H1.1": 65, "H10.1": 40, H41: 50, "12": 45, VIP: 10, PR: 40 }
+        day: "14 شباط", target: 129518, events: { "H1.1": 7, "H10.1": 5, H28: 6 },
+        densities: { H1: 90, H2: 92, H10: 92, H11: 87, H25: 90, H26: 88, H27: 90, H28: 87, "H1.1": 85, "H10.1": 81, H41: 78, "12": 80, VIP: 13, PR: 83 }
       },
       {
-        day: "15 شباط", target: 125012, events: { "H1.1": 3, "H10.1": 3, H28: 4 },
-        densities: { H1: 82, H2: 88, H10: 85, H11: 75, H25: 80, H26: 70, H27: 78, H28: 65, "H1.1": 50, "H10.1": 35, H41: 40, "12": 40, VIP: 8, PR: 35 }
+        day: "15 شباط", target: 141763, events: { "H1.1": 8, "H10.1": 6, H28: 7 },
+        densities: { H1: 96, H2: 98, H10: 98, H11: 93, H25: 96, H26: 94, H27: 96, H28: 93, "H1.1": 90, "H10.1": 86, H41: 83, "12": 85, VIP: 14, PR: 88 }
       },
       {
-        day: "16 شباط (الختام)", target: 45300, events: { "H1.1": 1, "H10.1": 1, H28: 1 },
-        densities: { H1: 45, H2: 65, H10: 60, H11: 35, H25: 40, H26: 30, H27: 55, H28: 30, "H1.1": 25, "H10.1": 25, H41: 15, "12": 15, VIP: 3, PR: 25 }
+        day: "16 شباط (الختام)", target: 137055, events: { "H1.1": 7, "H10.1": 6, H28: 7 },
+        densities: { H1: 93, H2: 95, H10: 95, H11: 91, H25: 93, H26: 92, H27: 93, H28: 91, "H1.1": 88, "H10.1": 84, H41: 81, "12": 83, VIP: 14, PR: 86 }
       },
     ];
 
@@ -1127,6 +1165,7 @@
   // -------------------------
   const setupGallery = () => {
     const track = document.getElementById("galleryTrack");
+    const userTrack = document.getElementById("userGalleryTrack");
     const wrapper = document.querySelector(".gallery-wrapper");
     if (!track || !wrapper) return;
 
@@ -1145,59 +1184,66 @@
 
     let LIST_URL = "";
     let PUBLIC_DIR = "";
+    let USER_LIST_URL = "";
+    let USER_DIR = "";
 
     if (window.location.protocol === "file:") {
       // If previewing from file system directly, fallback to node server routes to avoid CORS
       LIST_URL = `${API_BASE}/public/gallery.json`;
       PUBLIC_DIR = `./uploads/public/`;
+      USER_LIST_URL = `${API_BASE}/user/gallery.json`;
+      USER_DIR = `./uploads/user/`;
     } else {
       // On VSCode Live Server or Github Pages, simply fetch relative static files
       const baseRepo = guessGhBase() || ".";
       LIST_URL = `${baseRepo}/uploads/public/gallery.json`;
       PUBLIC_DIR = `${baseRepo}/uploads/public/`;
+      USER_LIST_URL = `${baseRepo}/uploads/user/gallery.json`;
+      USER_DIR = `${baseRepo}/uploads/user/`;
     }
 
-    const buildItem = (filename) => {
+    const buildItem = (filename, dir) => {
       const wrap = document.createElement("div");
       wrap.className = "gallery-item";
       const img = document.createElement("img");
       img.loading = "lazy";
       img.alt = "صورة من المعرض";
-      img.src = PUBLIC_DIR + encodeURIComponent(filename);
+      img.src = dir + encodeURIComponent(filename);
       wrap.appendChild(img);
       return wrap;
     };
 
-    const renderImages = (files) => {
-      track.innerHTML = "";
+    const renderImages = (files, target, dir) => {
+      if (!target) return;
+      target.innerHTML = "";
       if (!files || !files.length) {
         const empty = document.createElement("div");
         empty.className = "text-center w-full py-8 text-slate-500 font-bold";
         empty.textContent = "لا توجد صور منشورة حالياً.";
-        track.appendChild(empty);
+        target.appendChild(empty);
         return;
       }
 
       const set1 = document.createElement("div");
       set1.className = "gallery-set";
       set1.dataset.set = "1";
-      files.forEach((f) => set1.appendChild(buildItem(f)));
+      files.forEach((f) => set1.appendChild(buildItem(f, dir)));
 
       const set2 = set1.cloneNode(true);
       set2.dataset.set = "2";
 
-      track.appendChild(set1);
-      track.appendChild(set2);
+      target.appendChild(set1);
+      target.appendChild(set2);
     };
 
     const loadGallery = async () => {
       track.innerHTML = "";
+      if (userTrack) userTrack.innerHTML = "";
+      
       const defaultFiles = [
         "631584631_122123423739126208_6393421084653786636_n.jpg",
         "632609301_122124004335126208_6569830779751906835_n.jpg",
         "629520034_122124013527126208_5841801769823622818_n.jpg",
-        "631823291_122124341487126208_8590593667139748535_n.jpg",
-        "632385947_122124338181126208_1792607530793737425_n.jpg",
         "634165138_122124813159126208_6537274596070465056_n.jpg",
         "634749336_122125255635126208_6460779698768701157_n.jpg",
         "637673074_122125373793126208_558079665942474763_n.jpg",
@@ -1210,10 +1256,27 @@
         if (!r.ok) throw new Error(String(r.status));
         const data = await r.json();
         const files = Array.isArray(data.files) ? data.files : defaultFiles;
-        renderImages(files);
+        renderImages(files, track, PUBLIC_DIR);
       } catch (err) {
         console.warn("استخدام الصور الافتراضية بسبب تعذر الجلب:", err);
-        renderImages(defaultFiles);
+        renderImages(defaultFiles, track, PUBLIC_DIR);
+      }
+
+      // Load user images
+      if (userTrack) {
+        try {
+          const r = await fetch(USER_LIST_URL, { cache: "no-store", mode: "cors" });
+          if (!r.ok) throw new Error(String(r.status));
+          const data = await r.json();
+          if (Array.isArray(data.files) && data.files.length > 0) {
+            renderImages(data.files, userTrack, USER_DIR);
+          } else {
+             renderImages([], userTrack, USER_DIR);
+          }
+        } catch (err) {
+          console.warn("تعذر جلب صور الزوار الافتراضية:", err);
+          renderImages([], userTrack, USER_DIR);
+        }
       }
     };
 
@@ -1229,7 +1292,6 @@
 
         const file = input.files[0];
 
-        // التحقق من الحجم (مثلاً 5 ميجا كحد أقصى)
         if (file.size > 5 * 1024 * 1024) {
           status.innerText = "❌ الملف كبير جداً (الأقصى 5MB)";
           status.className = "text-xs font-bold text-rose-600 mt-2";

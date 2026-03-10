@@ -89,10 +89,11 @@
             <a class="nav-link" href="#visitors">الزوار</a>
             <a class="nav-link" href="#insights">الإنجازات</a>
             <a class="nav-link" href="#program">البرنامج</a>
-            <a class="nav-link" href="#delegations">الوفود</a>
+            <!-- <a class="nav-link" href="#delegations">الوفود</a> -->
             <a class="nav-link" href="#kids">قسم الطفل</a>
             <a class="nav-link" href="#satisfaction">الرضا</a>
             <a class="nav-link" href="#digital">الرقمي</a>
+            <a class="nav-link" href="#transport">النقل الداخلي</a>
             <a class="nav-link" href="#heatmap">الخريطة</a>
             <a class="nav-link" href="#bookcloud">سحابة الكتب</a>
             <a class="nav-link" href="#gallery">معرض الصور</a>
@@ -243,7 +244,6 @@
     </section>
 
     <!-- Sales -->
-    <!-- Sales -->
     <section id="sales" class="section-block reveal" aria-labelledby="salesTitle">
       <div class="section-title border-brand">
         <h2 id="salesTitle">المبيعات والأكثر طلبًا</h2>
@@ -291,7 +291,6 @@
               <div class="space-y-3 mt-3 animate-fadeIn">
                 <div class="item-row"><span>هادي العبد الله</span></div>
                 <div class="item-row"><span>د. هالة سمير</span></div>
-                <div class="item-row"><span>محمود الحسنات</span></div>
                 <div class="item-row"><span>د. أيمن العتوم</span></div>
                 <div class="item-row"><span>فاضل سليمان</span></div>
                 <div class="item-row"><span>مريم وليد مصطفى</span></div>
@@ -309,6 +308,78 @@
           <h3 class="card-title text-center">توزع دور النشر حسب البلد (%)</h3>
           <div class="chart-container h-64" role="img" aria-label="مخطط توزيع دور النشر حسب البلد">
             <canvas id="publishersGeoChart"></canvas>
+          </div>
+
+          <div class="mt-4 pt-4 border-t border-slate-100 flex flex-wrap justify-center gap-1.5"
+            aria-label="الدول المشاركة">
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/sy.png" width="14" alt="سوريا" class="rounded-[2px]"> سوريا</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/sa.png" width="14" alt="السعودية" class="rounded-[2px]"> السعودية</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/qa.png" width="14" alt="قطر" class="rounded-[2px]"> قطر</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/eg.png" width="14" alt="مصر" class="rounded-[2px]"> مصر</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/jo.png" width="14" alt="الأردن" class="rounded-[2px]"> الأردن</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/lb.png" width="14" alt="لبنان" class="rounded-[2px]"> لبنان</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/tr.png" width="14" alt="تركيا" class="rounded-[2px]"> تركيا</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/ae.png" width="14" alt="الإمارات" class="rounded-[2px]"> الإمارات</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/kw.png" width="14" alt="الكويت" class="rounded-[2px]"> الكويت</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/iq.png" width="14" alt="العراق" class="rounded-[2px]"> العراق</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/ma.png" width="14" alt="المغرب" class="rounded-[2px]"> المغرب</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/tn.png" width="14" alt="تونس" class="rounded-[2px]"> تونس</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/fr.png" width="14" alt="فرنسا" class="rounded-[2px]"> فرنسا</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/ly.png" width="14" alt="ليبيا" class="rounded-[2px]"> ليبيا</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/ps.png" width="14" alt="فلسطين" class="rounded-[2px]"> فلسطين</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/se.png" width="14" alt="السويد" class="rounded-[2px]"> السويد</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/sd.png" width="14" alt="السودان" class="rounded-[2px]"> السودان</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/om.png" width="14" alt="عُمان" class="rounded-[2px]"> عُمان</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/ss.png" width="14" alt="جنوب السودان" class="rounded-[2px]"> جنوب
+              السودان</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/id.png" width="14" alt="إندونيسيا" class="rounded-[2px]"> إندونيسيا</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/it.png" width="14" alt="إيطاليا" class="rounded-[2px]"> إيطاليا</span>
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-brand"><img
+                src="https://flagcdn.com/w20/gb-sct.png" width="14" alt="اسكتلندا" class="rounded-[2px]">
+              اسكتلندا</span>
           </div>
         </div>
       </div>
@@ -387,7 +458,8 @@
         <div class="card">
           <h3 class="card-title">صورة عامة عن الحضور والفعاليات</h3>
           <p class="text-sm text-slate-600 leading-relaxed text-justify">
-            بلغ إجمالي الفعاليات أكثر من 1000 فعالية، وبلغت نسبة إشغال القاعات 94%، بمتوسط حضور بلغ 300 شخص. وقد برزت من بينها
+            بلغ إجمالي الفعاليات أكثر من 1000 فعالية، وبلغت نسبة إشغال القاعات 94%، بمتوسط حضور بلغ 300 شخص. وقد برزت من
+            بينها
             محاضرة الدكتور ياسر الحزيمي، وندوة «الشؤون الشرطية وخدمة المواطن»، والأمسية الشعرية للشاعر ناصر الوبير. </p>
 
           <div class="mt-4 grid grid-cols-2 gap-3">
@@ -413,7 +485,7 @@
 
 
 
-    <!-- Delegations -->
+    <!-- Delegations
     <section id="delegations" class="delegations reveal" aria-labelledby="delegationsTitle">
       <div class="delegations-inner">
         <div class="delegations-title">
@@ -477,7 +549,7 @@
         </div>
 
       </div>
-    </section>
+    </section>   -->
 
     <!-- Kids -->
     <section id="kids" class="section-block reveal" aria-labelledby="kidsTitle">
@@ -512,7 +584,7 @@
           <div class="kid-card">
             <div class="text-3xl mb-2" aria-hidden="true">🎁</div>
             <div class="kid-num">25K</div>
-            <div class="kid-label">كتاب هدايا</div>
+            <div class="kid-label">كتاب هدية</div>
           </div>
           <div class="kid-card">
             <div class="text-3xl mb-2" aria-hidden="true">🤝</div>
@@ -527,20 +599,36 @@
         </div>
       </div>
 
-      <div class="youth-banner">
-        <div>
-          <h3 class="text-white text-2xl font-bold flex items-center gap-2 mb-2">
-            <span class="text-yellow-300 text-3xl" aria-hidden="true">⚡</span> قوة الاستقطاب: الأقسام الشبابية
-          </h3>
-          <p class="text-blue-100 text-lg">
-            بشراكة استراتيجية بين <span class="font-bold text-white">وزارة الشباب والرياضة</span> و <span
-              class="font-bold text-white">شؤون الشباب</span>.
-          </p>
-        </div>
+    </section>
 
-        <div class="youth-badge">
-          <span class="block text-4xl mb-2" aria-hidden="true">🚀</span>
-          <span class="font-bold text-white">حضور شبابي طاغٍ</span>
+    <!-- Transportation -->
+    <section id="transport" class="section-block reveal" aria-labelledby="transportTitle">
+      <div class="section-title border-brandDark">
+        <h2 id="transportTitle">خدمة النقل الداخلي للزوار</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="stat-card border-brand">
+          <div class="stat-label">باصات مخصصة يومياً</div>
+          <div class="stat-value text-brand" data-count="20">20</div>
+          <div class="stat-note">سعة كل باص: 60 مقعد</div>
+        </div>
+        <div class="stat-card border-brandDark">
+          <div class="stat-label">إجمالي الرحلات المنجزة</div>
+          <div class="stat-value text-brandDark" data-count="2755">2,755</div>
+          <div class="stat-note">من محاور دمشق وريفها</div>
+        </div>
+        <div class="stat-card border-brand2">
+          <div class="stat-label">إجمالي المستفيدين تقريباً</div>
+          <div class="stat-value text-brand2" data-count="328680">328,680</div>
+          <div class="stat-note">زائر استخدموا النقل العام للمعرض</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title text-center">كثافة الرحلات اليومية خلال أيام المعرض</h3>
+        <div class="chart-container h-80" role="img" aria-label="مخطط رحلات النقل الداخلي عبر الأيام">
+          <canvas id="transportChart"></canvas>
         </div>
       </div>
     </section>
@@ -549,7 +637,6 @@
     <section id="satisfaction" class="section-block reveal" aria-labelledby="satisfactionTitle">
       <div class="section-title border-brand2">
         <h2 id="satisfactionTitle">مؤشرات الرضا وجودة الخدمات</h2>
-        <span class="text-xs text-slate-500 font-bold">مقياس من 5</span>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -575,33 +662,6 @@
       </div>
     </section>
 
-    <!-- Voices -->
-    <section id="voices" class="section-block reveal" aria-labelledby="voicesTitle">
-      <div class="section-title border-brand">
-        <h2 id="voicesTitle">أصوات الزوار: التحليل النوعي</h2>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="card p-0 overflow-hidden border-t-8 border-success">
-          <div class="p-5 bg-success/10 border-b border-success/20">
-            <h3 class="font-bold text-success flex items-center gap-2">
-              <span class="text-2xl" aria-hidden="true">💚</span> ما أعجب الزوار (من 6500 صوت)
-            </h3>
-          </div>
-          <div class="p-6 scroll-container space-y-4">
-            <div class="quote green"><b>عبد الرحمن:</b>
-              <p>"تنوع دور النشر والتنظيم كان رائعاً جداً."</p>
-            </div>
-            <div class="quote green"><b>ماريا:</b>
-              <p>"وجود خارطة واضحة للأجنحة وسهولة في التنقل."</p>
-            </div>
-            <div class="quote green"><b>ليث:</b>
-              <p>"لطف تعامل الموظفين والمساعدة السريعة."</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- Digital -->
     <section id="digital" class="section-block reveal" aria-labelledby="digitalTitle">
@@ -622,29 +682,29 @@
             <p class="text-sm text-slate-500 mt-1">خلاصة الأداء الشامل لجميع المنصات خلال فترة المعرض</p>
           </div>
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:flex-wrap gap-3 w-full lg:w-auto">
-            <div class="badge-modern">
-              <span class="badge-label">المنشورات</span>
-              <strong class="badge-val">3,537</strong>
+            <div class="badge-modern flex flex-col justify-center gap-1">
+              <span class="badge-label text-sm">المنشورات</span>
+              <strong class="badge-val text-xl lg:text-2xl font-black">3,537</strong>
             </div>
-            <div class="badge-modern text-brand">
-              <span class="badge-label">المشاهدات</span>
-              <strong class="badge-val">37.2M</strong>
+            <div class="badge-modern text-brand flex flex-col justify-center gap-1">
+              <span class="badge-label text-sm">المشاهدات</span>
+              <strong class="badge-val text-xl lg:text-2xl font-black">37.2M</strong>
             </div>
-            <div class="badge-modern">
-              <span class="badge-label">الوصول</span>
-              <strong class="badge-val">13.8M</strong>
+            <div class="badge-modern flex flex-col justify-center gap-1">
+              <span class="badge-label text-sm">الوصول</span>
+              <strong class="badge-val text-xl lg:text-2xl font-black">13.8M</strong>
             </div>
-            <div class="badge-modern text-danger">
-              <span class="badge-label">مشاهدات الفيديو</span>
-              <strong class="badge-val">4M</strong>
+            <div class="badge-modern text-danger flex flex-col justify-center gap-1">
+              <span class="badge-label text-sm">مشاهدات الفيديو</span>
+              <strong class="badge-val text-xl lg:text-2xl font-black">4M</strong>
             </div>
-            <div class="badge-modern">
-              <span class="badge-label">التفاعلات</span>
-              <strong class="badge-val">1.8M</strong>
+            <div class="badge-modern flex flex-col justify-center gap-1">
+              <span class="badge-label text-sm">التفاعلات</span>
+              <strong class="badge-val text-xl lg:text-2xl font-black">1.8M</strong>
             </div>
-            <div class="badge-modern text-success">
-              <span class="badge-label">المتابعين</span>
-              <strong class="badge-val">93K</strong>
+            <div class="badge-modern text-success flex flex-col justify-center gap-1">
+              <span class="badge-label text-sm">المتابعين</span>
+              <strong class="badge-val text-xl lg:text-2xl font-black">93K</strong>
             </div>
           </div>
         </div>
@@ -652,59 +712,230 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
 
-        <div class="platform-card brand-facebook">
-          <div class="platform-title">فيسبوك</div>
-          <ul class="platform-list">
-            <li><span>عدد المشاركات</span><strong>1,046</strong></li>
-            <li><span>إجمالي المشاهدات</span><strong>15,950,556</strong></li>
-            <li><span>الوصول</span><strong>11,795,975</strong></li>
-            <li><span>مشاهدات الفيديو</span><strong>3,535,578</strong></li>
-            <li><span>التفاعلات</span><strong>973,605</strong></li>
-            <li class="highlight"><span>المتابعون الحاليون</span><strong>63,800</strong></li>
-          </ul>
+        <!-- Facebook -->
+        <div class="relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 group">
+          <div class="absolute inset-0 bg-gradient-to-br from-[#1877F2]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute top-0 right-0 w-full h-1.5 bg-[#1877F2]"></div>
+          
+          <div class="p-5 relative z-10">
+            <div class="flex items-center gap-4 mb-4 pb-3 border-b border-slate-100">
+              <div class="w-11 h-11 rounded-xl bg-[#1877F2]/10 flex items-center justify-center text-[#1877F2] group-hover:scale-110 transition-transform duration-300 shadow-sm border border-[#1877F2]/20">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+              </div>
+              <h3 class="text-[1.35rem] leading-none font-black text-slate-800 tracking-tight">فيسبوك</h3>
+            </div>
+            
+            <div class="space-y-1.5">
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">عدد المشاركات</span>
+                <strong class="text-[15px] font-black text-slate-800">1,046</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">إجمالي المشاهدات</span>
+                <strong class="text-[15px] font-black text-slate-800">15.9M</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">الوصول</span>
+                <strong class="text-[15px] font-black text-slate-800">11.7M</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">مشاهدات الفيديو</span>
+                <strong class="text-[15px] font-black text-slate-800">3.5M</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">التفاعلات</span>
+                <strong class="text-[15px] font-black text-slate-800">973K</strong>
+              </div>
+            </div>
+            
+            <div class="mt-4 p-3.5 rounded-xl bg-[#1877F2]/10 border border-[#1877F2]/20 flex justify-between items-center group-hover:bg-[#1877F2]/20 transition-colors">
+              <span class="text-sm font-black text-[#1877F2]">المتابعون الحاليون</span>
+              <strong class="text-[1.35rem] leading-none font-black text-[#1877F2]">63.8K</strong>
+            </div>
+          </div>
         </div>
 
-        <div class="platform-card brand-instagram">
-          <div class="platform-title">إنستغرام</div>
-          <ul class="platform-list">
-            <li><span>عدد المشاركات</span><strong>802</strong></li>
-            <li><span>إجمالي المشاهدات</span><strong>18,211,223</strong></li>
-            <li><span>الوصول</span><strong>2,059,591</strong></li>
-            <li><span>التفاعلات</span><strong>649,883</strong></li>
-            <li class="highlight"><span>المتابعون الحاليون</span><strong>26,896</strong></li>
-          </ul>
+        <!-- Instagram -->
+         <div class="relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 group">
+          <div class="absolute inset-0 bg-gradient-to-br from-[#E4405F]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute top-0 right-0 w-full h-1.5 bg-gradient-to-r from-[#f09433] via-[#e6683c] to-[#bc1888]"></div>
+          
+          <div class="p-5 relative z-10">
+            <div class="flex items-center gap-4 mb-4 pb-3 border-b border-slate-100">
+              <div class="w-11 h-11 rounded-xl bg-[#E4405F]/10 flex items-center justify-center text-[#E4405F] group-hover:scale-110 transition-transform duration-300 shadow-sm border border-[#E4405F]/20">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" /></svg>
+              </div>
+              <h3 class="text-[1.35rem] leading-none font-black text-slate-800 tracking-tight">إنستغرام</h3>
+            </div>
+            
+            <div class="space-y-1.5">
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">عدد المشاركات</span>
+                <strong class="text-[15px] font-black text-slate-800">802</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">إجمالي المشاهدات</span>
+                <strong class="text-[15px] font-black text-slate-800">18.2M</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">الوصول</span>
+                <strong class="text-[15px] font-black text-slate-800">2M</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">التفاعلات</span>
+                <strong class="text-[15px] font-black text-slate-800">649K</strong>
+              </div>
+            </div>
+            
+            <div class="mt-4 p-3.5 rounded-xl bg-[#E4405F]/10 border border-[#E4405F]/20 flex justify-between items-center group-hover:bg-[#E4405F]/20 transition-colors">
+              <span class="text-sm font-black text-[#E4405F]">المتابعون الحاليون</span>
+              <strong class="text-[1.35rem] leading-none font-black text-[#E4405F]">26.8K</strong>
+            </div>
+          </div>
         </div>
 
-        <div class="platform-card brand-youtube">
-          <div class="platform-title">يوتيوب</div>
-          <ul class="platform-list">
-            <li><span>عدد الفيديوهات</span><strong>22</strong></li>
-            <li><span>إجمالي المشاهدات</span><strong>978,173</strong></li>
-            <li><span>مشاهدات الفيديو</span><strong>82,485</strong></li>
-            <li><span>التفاعلات</span><strong>3,072</strong></li>
-            <li class="highlight"><span>المشتركون</span><strong>1,229</strong></li>
-          </ul>
+        <!-- Youtube -->
+        <div class="relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 group">
+          <div class="absolute inset-0 bg-gradient-to-br from-[#FF0000]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute top-0 right-0 w-full h-1.5 bg-[#FF0000]"></div>
+          
+          <div class="p-5 relative z-10">
+            <div class="flex items-center gap-4 mb-4 pb-3 border-b border-slate-100">
+              <div class="w-11 h-11 rounded-xl bg-[#FF0000]/10 flex items-center justify-center text-[#FF0000] group-hover:scale-110 transition-transform duration-300 shadow-sm border border-[#FF0000]/20">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" clip-rule="evenodd" /></svg>
+              </div>
+              <h3 class="text-[1.35rem] leading-none font-black text-slate-800 tracking-tight">يوتيوب</h3>
+            </div>
+            
+            <div class="space-y-1.5">
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">عدد الفيديوهات</span>
+                <strong class="text-[15px] font-black text-slate-800">22</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">إجمالي المشاهدات</span>
+                <strong class="text-[15px] font-black text-slate-800">978K</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">مشاهدات الفيديو</span>
+                <strong class="text-[15px] font-black text-slate-800">82.4K</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">التفاعلات</span>
+                <strong class="text-[15px] font-black text-slate-800">3,072</strong>
+              </div>
+            </div>
+            
+            <div class="mt-4 p-3.5 rounded-xl bg-[#FF0000]/10 border border-[#FF0000]/20 flex justify-between items-center group-hover:bg-[#FF0000]/20 transition-colors">
+              <span class="text-sm font-black text-[#FF0000]">المشتركون</span>
+              <strong class="text-[1.35rem] leading-none font-black text-[#FF0000]">1,229</strong>
+            </div>
+          </div>
         </div>
 
-        <div class="platform-card brand-x">
-          <div class="platform-title">منصة X</div>
-          <ul class="platform-list">
-            <li><span>عدد المنشورات</span><strong>457</strong></li>
-            <li><span>إجمالي المشاهدات</span><strong>1,845,206</strong></li>
-            <li><span>مشاهدات الفيديو</span><strong>395,000</strong></li>
-            <li><span>التفاعلات</span><strong>132,327</strong></li>
-            <li class="highlight"><span>المتابعون</span><strong>386</strong></li>
-          </ul>
+        <!-- X (Twitter) -->
+        <div class="relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 group">
+          <div class="absolute inset-0 bg-gradient-to-br from-slate-300/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute top-0 right-0 w-full h-1.5 bg-black"></div>
+          
+          <div class="p-5 relative z-10">
+            <div class="flex items-center gap-4 mb-4 pb-3 border-b border-slate-100">
+              <div class="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center text-black group-hover:scale-110 transition-transform duration-300 shadow-sm border border-slate-200">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" clip-rule="evenodd" /></svg>
+              </div>
+              <h3 class="text-[1.35rem] leading-none font-black text-slate-800 tracking-tight">منصة X</h3>
+            </div>
+            
+            <div class="space-y-1.5">
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">عدد المنشورات</span>
+                <strong class="text-[15px] font-black text-slate-800">457</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">إجمالي المشاهدات</span>
+                <strong class="text-[15px] font-black text-slate-800">1.8M</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">مشاهدات الفيديو</span>
+                <strong class="text-[15px] font-black text-slate-800">395K</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">التفاعلات</span>
+                <strong class="text-[15px] font-black text-slate-800">132K</strong>
+              </div>
+            </div>
+            
+            <div class="mt-4 p-3.5 rounded-xl bg-slate-100 border border-slate-200 flex justify-between items-center group-hover:bg-slate-200 transition-colors">
+              <span class="text-sm font-black text-slate-800">المتابعون</span>
+              <strong class="text-[1.35rem] leading-none font-black text-slate-800">386</strong>
+            </div>
+          </div>
         </div>
 
-        <div class="platform-card brand-telegram">
-          <div class="platform-title">تيليغرام</div>
-          <ul class="platform-list">
-            <li><span>عدد المنشورات</span><strong>1,210</strong></li>
-            <li><span>إجمالي المشاهدات</span><strong>267,840</strong></li>
-            <li><span>التفاعلات</span><strong>108,000</strong></li>
-            <li class="highlight"><span>المتابعون</span><strong>1,080</strong></li>
-          </ul>
+        <!-- Telegram -->
+        <div class="relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 group">
+          <div class="absolute inset-0 bg-gradient-to-br from-[#2CA5E0]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute top-0 right-0 w-full h-1.5 bg-[#2CA5E0]"></div>
+          
+          <div class="p-5 relative z-10">
+            <div class="flex items-center gap-4 mb-4 pb-3 border-b border-slate-100">
+              <div class="w-11 h-11 rounded-xl bg-[#2CA5E0]/10 flex items-center justify-center text-[#2CA5E0] group-hover:scale-110 transition-transform duration-300 shadow-sm border border-[#2CA5E0]/20">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.888-.662 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" clip-rule="evenodd" /></svg>
+              </div>
+              <h3 class="text-[1.35rem] leading-none font-black text-slate-800 tracking-tight">تيليغرام</h3>
+            </div>
+            
+            <div class="space-y-1.5">
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">عدد المنشورات</span>
+                <strong class="text-[15px] font-black text-slate-800">1,210</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">إجمالي المشاهدات</span>
+                <strong class="text-[15px] font-black text-slate-800">267K</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">التفاعلات</span>
+                <strong class="text-[15px] font-black text-slate-800">108K</strong>
+              </div>
+            </div>
+            
+            <div class="mt-4 p-3.5 rounded-xl bg-[#2CA5E0]/10 border border-[#2CA5E0]/20 flex justify-between items-center group-hover:bg-[#2CA5E0]/20 transition-colors">
+              <span class="text-sm font-black text-[#2CA5E0]">المتابعون</span>
+              <strong class="text-[1.35rem] leading-none font-black text-[#2CA5E0]">1,080</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- WhatsApp -->
+        <div class="relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 group">
+          <div class="absolute inset-0 bg-gradient-to-br from-[#25D366]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute top-0 right-0 w-full h-1.5 bg-[#25D366]"></div>
+          
+          <div class="p-5 relative z-10">
+            <div class="flex items-center gap-4 mb-4 pb-3 border-b border-slate-100">
+              <div class="w-11 h-11 rounded-xl bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:scale-110 transition-transform duration-300 shadow-sm border border-[#25D366]/20">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" clip-rule="evenodd" /></svg>
+              </div>
+              <h3 class="text-[1.35rem] leading-none font-black text-slate-800 tracking-tight">واتساب</h3>
+            </div>
+            
+            <div class="space-y-1.5">
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">الرسائل والمنشورات</span>
+                <strong class="text-[15px] font-black text-slate-800">350</strong>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
+                <span class="text-[13px] font-bold text-slate-500">التفاعلات والاستفسارات</span>
+                <strong class="text-[15px] font-black text-slate-800">4,200</strong>
+              </div>
+            </div>
+            
+            <div class="mt-4 p-3.5 rounded-xl bg-[#25D366]/10 border border-[#25D366]/20 flex justify-between items-center group-hover:bg-[#25D366]/20 transition-colors">
+              <span class="text-sm font-black text-[#25D366]">أعضاء المجموعات</span>
+              <strong class="text-[1.35rem] leading-none font-black text-[#25D366]">2,500</strong>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -1114,10 +1345,18 @@
       </div>
 
 
-      <div class="card mb-6 bg-cream border-brandDark/20 shadow-md">
-        <div class="gallery-wrapper py-6">
-          <div class="gallery-track" id="galleryTrack" aria-label="شريط صور متحرك">
+      <div class="card mb-6 bg-cream border-brandDark/20 shadow-md overflow-hidden">
+        <h3 class="text-center font-black text-brandDark mb-4 text-xl">صور المعرض الرسمية</h3>
+        <div class="gallery-wrapper py-4 mb-2">
+          <div class="gallery-track" id="galleryTrack" aria-label="شريط صور رسمي متحرك">
             <!-- JS will inject images -->
+          </div>
+        </div>
+
+        <h3 class="text-center font-black text-brandDark mb-4 mt-8 pt-6 border-t border-slate-200 text-xl">صور بعدسات زوارنا</h3>
+        <div class="gallery-wrapper py-4">
+          <div class="gallery-track user-gallery-track" id="userGalleryTrack" aria-label="شريط صور الزوار متحرك" style="animation-direction: reverse;">
+            <!-- JS will inject user images -->
           </div>
         </div>
       </div>
@@ -1142,7 +1381,7 @@
         <h4 class="text-lg md:text-2xl font-black text-brand2 mb-2">إحصائيات معرض دمشق الدولي للكتاب<br><span
             class="text-sm md:text-lg text-brand mt-1 inline-block">الدورة الاستثنائية</span></h4>
         <p class="text-xs md:text-base font-medium text-slate-300 leading-relaxed">
-          بإشراف أ. سعد نعسان مدير معرض دمشق الدولي للكتاب – تنفيذ أ. ليلى الدبس
+          بإشراف أ. سعد نعسان مدير معرض دمشق الدولي للكتاب
           <br>
           <span class="text-slate-400 text-[11px] md:text-sm mt-1.5 inline-block">فريق إدارة الفعاليات / لجنة الإحصاء
             والتقييم</span>
@@ -1154,10 +1393,9 @@
         <span>جميع الحقوق محفوظة &copy; 2026</span>
         <span
           class="bg-slate-800/50 px-4 py-2 rounded-full text-slate-300 border border-slate-700/50 transition-colors hover:bg-slate-800">
-          تم التحديث في: فبراير 2026
+          تم التحديث في: آذار 2026
         </span>
       </div>
-
     </div>
   </footer>
 </body>
